@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/house"
+        android:title="Trang chủ"
+        app:cnb_unselectedColor="@color/cnb_unselected_icon"
+        app:cnb_iconColor="@color/cnb_selected_icon"
+        app:cnb_backgroundColor="@color/cnb_selected_background" />
+
+    <item
+        android:id="@+id/navigation_khoa_hoc"
+        android:icon="@drawable/books"
+        android:title="Khóa học"
+        app:cnb_unselectedColor="@color/cnb_unselected_icon"
+        app:cnb_iconColor="@color/cnb_selected_icon"
+        app:cnb_backgroundColor="@color/cnb_selected_background" />
+
+    <item
+        android:id="@+id/navigation_luyen_tap"
+        android:icon="@drawable/pencil_simple_line"
+        android:title="Luyện tập"
+        app:cnb_unselectedColor="@color/cnb_unselected_icon"
+        app:cnb_iconColor="@color/cnb_selected_icon"
+        app:cnb_backgroundColor="@color/cnb_selected_background" />
+
+    <item
+        android:id="@+id/navigation_hoc_truc_tuyen"
+        android:icon="@drawable/webcam"
+        android:title="Trực tuyến"
+        app:cnb_unselectedColor="@color/cnb_unselected_icon"
+        app:cnb_iconColor="@color/cnb_selected_icon"
+        app:cnb_backgroundColor="@color/cnb_selected_background" />
+
+    <item
+        android:id="@+id/navigation_ca_nhan"
+        android:icon="@drawable/user"
+        android:title="Cá nhân"
+        app:cnb_unselectedColor="@color/cnb_unselected_icon"
+        app:cnb_iconColor="@color/cnb_selected_icon"
+        app:cnb_backgroundColor="@color/cnb_selected_background" />
+</menu>

@@ -1,0 +1,74 @@
+<resources>
+    <string name="app_name">QL Đào tạo</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_user">Chào buổi sáng, %1$s</string>
+    <string name="level_label">Cấp %1$d</string>
+    <string name="continue_learning">Tiếp tục học</string>
+    <string name="online_schedule">Lịch học trực tuyến</string>
+    <string name="quick_learning">Học nhanh (Shorts)</string>
+    <string name="achievements">Thành tích</string>
+    <string name="completed_percentage">Đã hoàn thành %1$d%%</string>
+    <string name="btn_continue">Học tiếp</string>
+    <string name="btn_join_now">Tham gia ngay</string>
+    <string name="starting_in">Bắt đầu trong %1$d phút</string>
+    <string name="tomorrow">Ngày mai</string>
+    <string name="not_yet_time">Chưa đến giờ</string>
+    <string name="leaderboard_summary">Bạn đang đứng hạng %1$d tại %2$s</string>
+    <string name="weekly_progress">Tiến độ tuần này của bạn tăng %1$d%% so với tuần trước</string>
+    <string name="view_full_leaderboard">Xem bảng xếp hạng đầy đủ</string>
+    <string name="notification_desc">Thông báo</string>
+    <string name="downloaded_desc">Đã tải xuống</string>
+
+    <!-- Login Strings -->
+    <string name="login_welcome_title">Chào mừng trở lại</string>
+    <string name="hint_username">Tên đăng nhập</string>
+    <string name="hint_password">Mật khẩu</string>
+    <string name="btn_login">Đăng nhập</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+
+    <!-- Course Strings -->
+    <string name="search_course_hint">Tìm kiếm khóa học...</string>
+    <string name="filter_all">Tất cả</string>
+    <string name="filter_learning">Đang học</string>
+    <string name="filter_downloaded">Đã tải về</string>
+    <string name="filter_specialization">Chuyên môn</string>
+    <string name="tag_mandatory">BẮT BUỘC</string>
+    <string name="instructor_format">Giảng viên: %1$s</string>
+    <string name="xp_gain">+%1$d XP</string>
+
+    <!-- Practice Strings -->
+    <string name="practice_title">Luyện tập</string>
+    <string name="performance_summary">Hiệu suất cá nhân</string>
+    <string name="streak_days">%1$d Ngày</string>
+    <string name="rank_label">Hạng %1$d</string>
+    <string name="new_quizzes">Đề thi mới nhất</string>
+    <string name="quick_practice">Luyện nhanh</string>
+    <string name="leaderboard_title">Bảng xếp hạng</string>
+    <string name="view_all">Xem tất cả</string>
+    <string name="total_score_label">Tổng điểm</string>
+    <string name="rank_summary_label">Hạng</string>
+    <string name="streak_label">Streak</string>
+    <string name="xp_progress_format">%1$d/%2$d XP</string>
+
+    <!-- Online Learning Strings -->
+    <string name="online_learning_title">Học trực tuyến</string>
+    <string name="today_schedule">Lịch học hôm nay</string>
+    <string name="live_now">Đang diễn ra</string>
+    <string name="join_class_now">Vào lớp ngay</string>
+    <string name="no_classes_today">Không có lịch học hôm nay</string>
+    <string name="upcoming_classes">Sắp diễn ra</string>
+
+    <!-- Personal Strings -->
+    <string name="profile_title">Cá nhân</string>
+    <string name="certificates_label">Chứng chỉ của tôi</string>
+    <string name="download_pdf">Tải PDF</string>
+    <string name="courses_completed_label">Khóa học</string>
+    <string name="certs_earned_label">Chứng chỉ</string>
+    <string name="total_xp_label">Tổng XP</string>
+    <string name="account_section">Tài khoản</string>
+    <string name="edit_profile">Chỉnh sửa hồ sơ</string>
+    <string name="app_settings">Cài đặt ứng dụng</string>
+    <string name="security_settings">Bảo mật</string>
+    <string name="help_support">Hỗ trợ &amp; Phản hồi</string>
+    <string name="logout">Đăng xuất</string>
+</resources>

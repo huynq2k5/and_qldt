@@ -1,0 +1,30 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Quanlydaotao" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Main theme colors. (Updated to use our Primary Blue) -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/cnb_selected_background</item>
+        <item name="colorOnPrimaryContainer">@color/primary</item>
+
+        <!-- Surface and Background -->
+        <item name="android:windowBackground">@color/surface_variant</item>
+        <item name="android:colorBackground">@color/surface_variant</item>
+
+        <item name="android:statusBarColor">@color/surface_variant</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
+
+        <!-- System Navigation Bar -->
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">true</item>
+    </style>
+
+    <style name="Theme.Quanlydaotao" parent="Base.Theme.Quanlydaotao" />
+
+    <!-- Theme cho Splash Screen -->
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/surface_variant</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/icon_app</item>
+        <item name="postSplashScreenTheme">@style/Theme.Quanlydaotao</item>
+    </style>
+</resources>

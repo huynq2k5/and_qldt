@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="vn.huy.quanlydaotao.ui.home.HomeFragment"
+        android:label="Trang chủ"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_khoa_hoc"
+        android:name="vn.huy.quanlydaotao.ui.khoahoc.KhoaHocFragment"
+        android:label="Khóa học"
+        tools:layout="@layout/fragment_khoa_hoc" />
+
+    <fragment
+        android:id="@+id/navigation_luyen_tap"
+        android:name="vn.huy.quanlydaotao.ui.luyentap.LuyenTapFragment"
+        android:label="Luyện tập"
+        tools:layout="@layout/fragment_luyen_tap" />
+
+    <fragment
+        android:id="@+id/navigation_hoc_truc_tuyen"
+        android:name="vn.huy.quanlydaotao.ui.hoctructuyen.HocTrucTuyenFragment"
+        android:label="Học trực tuyến"
+        tools:layout="@layout/fragment_hoc_truc_tuyen" />
+
+    <fragment
+        android:id="@+id/navigation_ca_nhan"
+        android:name="vn.huy.quanlydaotao.ui.canhan.CaNhanFragment"
+        android:label="Cá nhân"
+        tools:layout="@layout/fragment_ca_nhan" />
+
+</navigation>
