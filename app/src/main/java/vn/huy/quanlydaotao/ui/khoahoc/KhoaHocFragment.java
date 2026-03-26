@@ -41,6 +41,15 @@ public class KhoaHocFragment extends Fragment {
         rvCourses.setLayoutManager(new LinearLayoutManager(getContext()));
         rvCourses.setAdapter(adapter);
 
+        //xu lu click
+        adapter.setOnItemClickListener(khoaHoc -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("id_khoa_hoc", khoaHoc.getId()); // Gửi ID khóa học sang màn hình Lớp học
+
+            androidx.navigation.Navigation.findNavController(view)
+                    .navigate(R.id.navigation_lop_hoc, bundle);
+        });
+
         // Khởi tạo Manual DI (Trong thực tế nên dùng Hilt/Dagger)
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         KhoaHocRepositoryImpl repo = new KhoaHocRepositoryImpl(

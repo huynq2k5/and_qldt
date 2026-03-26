@@ -17,11 +17,20 @@ import vn.huy.quanlydaotao.domain.model.KhoaHoc;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
 
+    public interface OnItemClickListener {
+        void onItemClick(KhoaHoc khoaHoc);
+    }
+
     private List<KhoaHoc> items = new ArrayList<>();
+    private OnItemClickListener listener;
 
     public void setItems(List<KhoaHoc> items) {
         this.items = items;
         notifyDataSetChanged();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -36,7 +45,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         KhoaHoc item = items.get(position);
         holder.tvTitle.setText(item.getTenKhoaHoc());
         holder.tvDesc.setText(item.getMoTa());
-        holder.imgIcon.setImageResource(R.drawable.books); // Mặc định dùng icon books
+        holder.imgIcon.setImageResource(R.drawable.books);
+        
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onItemClick(item);
+            }
+        });
     }
 
     @Override

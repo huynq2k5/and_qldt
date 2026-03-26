@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F6F8"
+    android:background="@color/surface_variant"
     tools:context=".ui.home.HomeFragment">
 
     <LinearLayout
@@ -38,8 +38,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Chào mừng,"
-                    android:textColor="#666666"
+                    android:text="Xin chào,"
+                    android:textColor="@color/text_secondary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
                     android:text="Người dùng"
-                    android:textColor="#212121"
+                    android:textColor="@color/text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -71,7 +71,7 @@
                         android:layout_height="24dp"
                         android:layout_gravity="center"
                         android:src="@drawable/bell"
-                        app:tint="#666666" />
+                        app:tint="@color/text_secondary" />
 
                     <View
                         android:layout_width="8dp"
@@ -91,9 +91,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="20dp"
             android:layout_marginBottom="24dp"
-            app:cardBackgroundColor="#0F172A"
-            app:cardCornerRadius="20dp"
-            app:strokeWidth="0dp">
+            app:cardBackgroundColor="@color/card_background"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:strokeColor="@color/card_stroke"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -105,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Nâng tầm kiến thức của bạn ngay hôm nay"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_primary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -115,8 +117,8 @@
                     android:layout_marginTop="20dp"
                     android:text="Khám phá ngay"
                     android:textAllCaps="false"
-                    android:textColor="#0F172A"
-                    app:backgroundTint="#FFFFFF"
+                    android:textColor="?android:attr/colorBackground"
+                    app:backgroundTint="@color/primary"
                     app:cornerRadius="12dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
@@ -133,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Khóa học mới nhất"
-                android:textColor="#212121"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>

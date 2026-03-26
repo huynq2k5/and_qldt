@@ -20,7 +20,7 @@
     <item
         android:id="@+id/navigation_luyen_tap"
         android:icon="@drawable/pencil_simple_line"
-        android:title="Luyện tập"
+        android:title="Kiểm tra"
         app:cnb_unselectedColor="@color/cnb_unselected_icon"
         app:cnb_iconColor="@color/cnb_selected_icon"
         app:cnb_backgroundColor="@color/cnb_selected_background" />
@@ -28,7 +28,7 @@
     <item
         android:id="@+id/navigation_hoc_truc_tuyen"
         android:icon="@drawable/webcam"
-        android:title="Trực tuyến"
+        android:title="Học Online"
         app:cnb_unselectedColor="@color/cnb_unselected_icon"
         app:cnb_iconColor="@color/cnb_selected_icon"
         app:cnb_backgroundColor="@color/cnb_selected_background" />

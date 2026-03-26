@@ -57,6 +57,13 @@ public class HomeFragment extends Fragment {
             rvHomeCourses.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
             courseAdapter = new HomeCourseAdapter();
             rvHomeCourses.setAdapter(courseAdapter);
+
+            courseAdapter.setOnItemClickListener(khoaHoc -> {
+                Bundle bundle = new Bundle();
+                bundle.putInt("id_khoa_hoc", khoaHoc.getId());
+                androidx.navigation.Navigation.findNavController(view)
+                        .navigate(R.id.navigation_lop_hoc, bundle);
+            });
         }
 
         // 2. Khởi tạo Manual DI (Giống KhoaHocFragment)
@@ -83,5 +90,8 @@ public class HomeFragment extends Fragment {
                 courseAdapter.setItems(danhSach);
             }
         });
+
+        // Tải lại dữ liệu từ API
+        khoaHocViewModel.taiLaiDuLieu();
     }
 }

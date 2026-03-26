@@ -20,13 +20,13 @@
     <fragment
         android:id="@+id/navigation_luyen_tap"
         android:name="vn.huy.quanlydaotao.ui.luyentap.LuyenTapFragment"
-        android:label="Luyện tập"
+        android:label="kiểm tra"
         tools:layout="@layout/fragment_luyen_tap" />
 
     <fragment
         android:id="@+id/navigation_hoc_truc_tuyen"
         android:name="vn.huy.quanlydaotao.ui.hoctructuyen.HocTrucTuyenFragment"
-        android:label="Học trực tuyến"
+        android:label="Học Online"
         tools:layout="@layout/fragment_hoc_truc_tuyen" />
 
     <fragment
@@ -34,5 +34,15 @@
         android:name="vn.huy.quanlydaotao.ui.canhan.CaNhanFragment"
         android:label="Cá nhân"
         tools:layout="@layout/fragment_ca_nhan" />
+
+    <fragment
+        android:id="@+id/navigation_lop_hoc"
+        android:name="vn.huy.quanlydaotao.ui.lophoc.LopHocFragment"
+        android:label="Lớp học"
+        tools:layout="@layout/fragment_lop_hoc">
+        <argument
+            android:name="id_khoa_hoc"
+            app:argType="integer" />
+    </fragment>
 
 </navigation>

@@ -68,6 +68,8 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(this, phanHoi.layThongBao(), Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
+            } else{
+                Toast.makeText(this, phanHoi.layThongBao(), Toast.LENGTH_SHORT).show();
             }
         });
 
