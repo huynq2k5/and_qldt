@@ -27,16 +27,50 @@ public class BaiHocAdapter extends RecyclerView.Adapter<BaiHocAdapter.ViewHolder
         return new ViewHolder(view);
     }
 
+    public interface OnBaiHocClickListener {
+        void onVideoGroupClick(List<BaiHoc> allVideos);
+        void onPdfClick(BaiHoc pdfLesson);
+    }
+
+    private OnBaiHocClickListener listener;
+
+    public void setOnBaiHocClickListener(OnBaiHocClickListener listener) {
+        this.listener = listener;
+    }
+
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         BaiHoc item = items.get(position);
         holder.tvTieuDe.setText(item.getTieuDe());
+
         if ("video".equals(item.getLoaiNoiDung())) {
             holder.imgType.setImageResource(R.drawable.play_circle);
-            holder.tvLoai.setText("Video bài giảng");
+            holder.tvLoai.setText("Danh sách video bài giảng"); // Đổi text cho mục tổng hợp
+
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    // Lọc lại toàn bộ danh sách để lấy các bài video truyền đi
+                    List<BaiHoc> videos = new ArrayList<>();
+                    for(BaiHoc bh : items) {
+                        if("video".equals(bh.getLoaiNoiDung())) videos.add(bh);
+                    }
+                    listener.onVideoGroupClick(videos);
+                }
+            });
         } else {
             holder.imgType.setImageResource(R.drawable.books);
             holder.tvLoai.setText("Tài liệu PDF");
+
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    if ("video".equals(item.getLoaiNoiDung())) {
+                        // Chỉ cần gọi thế này, Fragment sẽ tự dùng realVideoList đã lưu
+                        listener.onVideoGroupClick(null);
+                    } else {
+                        listener.onPdfClick(item);
+                    }
+                }
+            });
         }
     }
 

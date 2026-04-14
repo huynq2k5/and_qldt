@@ -1,6 +1,6 @@
 package vn.huy.quanlydaotao.domain.model;
 
-public class BaiHoc {
+public class BaiHoc implements java.io.Serializable{
     private int id;
     private int idKhoaHoc;
     private String tieuDe;
