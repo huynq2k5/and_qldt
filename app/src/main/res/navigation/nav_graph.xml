@@ -45,4 +45,14 @@
             app:argType="integer" />
     </fragment>
 
+    <fragment
+        android:id="@+id/navigation_bai_hoc"
+        android:name="vn.huy.quanlydaotao.ui.baihoc.BaiHocFragment"
+        android:label="Nội dung bài học"
+        tools:layout="@layout/fragment_bai_hoc">
+        <argument
+            android:name="id_khoa_hoc"
+            app:argType="integer" />
+    </fragment>
+
 </navigation>

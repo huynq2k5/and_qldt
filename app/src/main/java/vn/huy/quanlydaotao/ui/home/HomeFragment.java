@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,8 +14,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
+import vn.huy.quanlydaotao.data.local.TokenManager;
 import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
 import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.KhoaHocRepositoryImpl;
@@ -26,7 +28,10 @@ import vn.huy.quanlydaotao.ui.khoahoc.KhoaHocViewModel;
 public class HomeFragment extends Fragment {
 
     private KhoaHocViewModel khoaHocViewModel;
-    private HomeCourseAdapter courseAdapter; // Sử dụng đúng Adapter cho Home
+    private HomeCourseAdapter courseAdapter;
+    private TextView tvActiveCourseTitle;
+    private LinearProgressIndicator courseProgress;
+    private TokenManager tokenManager;
 
     public HomeFragment() {}
 
@@ -39,19 +44,29 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setupHeader(view);
+        initViews(view);
         setupHomeData(view);
     }
 
-    private void setupHeader(View view) {
-        TextView tvUsername = view.findViewById(R.id.tvUsername);
-        if (tvUsername != null) tvUsername.setText("Huy Nguyễn");
+    private void initViews(View view) {
+        tokenManager = new TokenManager(requireContext());
 
-        // ... Các xử lý click khác giữ nguyên ...
+        tvActiveCourseTitle = view.findViewById(R.id.tvActiveCourseTitle);
+        courseProgress = view.findViewById(R.id.courseProgress);
+
+        TextView tvUsername = view.findViewById(R.id.tvUsername);
+        TextView tvGreeting = view.findViewById(R.id.tvGreeting);
+
+        if (tvUsername != null) {
+            tvUsername.setText(tokenManager.layHoTen());
+        }
+
+        if (tvGreeting != null) {
+            tvGreeting.setText("Vai trò: " + tokenManager.layVaiTro());
+        }
     }
 
     private void setupHomeData(View view) {
-        // 1. Setup RecyclerView cuộn ngang
         RecyclerView rvHomeCourses = view.findViewById(R.id.rvHomeCourses);
         if (rvHomeCourses != null) {
             rvHomeCourses.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
@@ -66,7 +81,6 @@ public class HomeFragment extends Fragment {
             });
         }
 
-        // 2. Khởi tạo Manual DI (Giống KhoaHocFragment)
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         KhoaHocRepositoryImpl repo = new KhoaHocRepositoryImpl(
                 CoSoDuLieuApp.getInstance(requireContext()).khoaHocDao(),
@@ -74,7 +88,6 @@ public class HomeFragment extends Fragment {
         );
         LayDanhSachKhoaHocUseCase useCase = new LayDanhSachKhoaHocUseCase(repo);
 
-        // 3. Khởi tạo ViewModel bằng Factory ẩn danh (Để tránh Crash)
         khoaHocViewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
@@ -84,14 +97,15 @@ public class HomeFragment extends Fragment {
             }
         }).get(KhoaHocViewModel.class);
 
-        // 4. Observe dữ liệu
         khoaHocViewModel.getDanhSachKhoaHoc().observe(getViewLifecycleOwner(), danhSach -> {
-            if (danhSach != null) {
+            if (danhSach != null && !danhSach.isEmpty()) {
                 courseAdapter.setItems(danhSach);
+
+                tvActiveCourseTitle.setText(danhSach.get(0).getTenKhoaHoc());
+                courseProgress.setProgress(65, true);
             }
         });
 
-        // Tải lại dữ liệu từ API
         khoaHocViewModel.taiLaiDuLieu();
     }
 }

@@ -55,7 +55,13 @@ public class LopHocFragment extends Fragment {
         rvLopHoc.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new LopHocAdapter();
         rvLopHoc.setAdapter(adapter);
+        adapter.setOnLopHocClickListener(idKhoaHoc -> {
+            Bundle bundle = new Bundle();
+            bundle.putInt("id_khoa_hoc", idKhoaHoc);
 
+            androidx.navigation.Navigation.findNavController(view)
+                    .navigate(R.id.navigation_bai_hoc, bundle);
+        });
         // Manual DI for ViewModel
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         LopHocRepositoryImpl repo = new LopHocRepositoryImpl(

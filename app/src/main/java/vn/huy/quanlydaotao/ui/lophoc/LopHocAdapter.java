@@ -34,6 +34,11 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LopHoc item = items.get(position);
         holder.tvTenLop.setText(item.getTenLop());
+        holder.btnVaoHoc.setOnClickListener(v -> {
+            if (listener != null) {
+                listener.onVaoHocClick(item.getIdKhoaHoc());
+            }
+        });
         holder.tvThoiGian.setText(item.getNgayBatDau() + " - " + item.getNgayKetThuc());
     }
 
@@ -44,11 +49,24 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTenLop, tvThoiGian;
+        View btnVaoHoc;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTenLop = itemView.findViewById(R.id.tvTenLop);
             tvThoiGian = itemView.findViewById(R.id.tvThoiGian);
+            btnVaoHoc = itemView.findViewById(R.id.btnVaoHoc);
         }
+    }
+
+    // Trong LopHocAdapter.java
+    public interface OnLopHocClickListener {
+        void onVaoHocClick(int idKhoaHoc);
+    }
+
+    private OnLopHocClickListener listener;
+
+    public void setOnLopHocClickListener(OnLopHocClickListener listener) {
+        this.listener = listener;
     }
 }

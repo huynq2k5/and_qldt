@@ -36,7 +36,7 @@ public class HomeCourseAdapter extends RecyclerView.Adapter<HomeCourseAdapter.Vi
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_course, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_course_card_modern, parent, false);
         return new ViewHolder(view);
     }
 
@@ -44,9 +44,12 @@ public class HomeCourseAdapter extends RecyclerView.Adapter<HomeCourseAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         KhoaHoc item = items.get(position);
         holder.tvTitle.setText(item.getTenKhoaHoc());
-        holder.tvInfo.setText(item.getNgayTao());
-        holder.imgIcon.setImageResource(R.drawable.graduation_cap);
-        
+
+        holder.tvDuration.setText("2 giờ 30 phút");
+        holder.tvLessons.setText("12 bài học");
+
+        holder.imgThumbnail.setImageResource(R.drawable.bg_3d_placeholder);
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(item);
@@ -60,14 +63,15 @@ public class HomeCourseAdapter extends RecyclerView.Adapter<HomeCourseAdapter.Vi
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgIcon;
-        TextView tvTitle, tvInfo;
+        ImageView imgThumbnail;
+        TextView tvTitle, tvDuration, tvLessons;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgIcon = itemView.findViewById(R.id.imgHomeCourse);
-            tvTitle = itemView.findViewById(R.id.tvHomeCourseTitle);
-            tvInfo = itemView.findViewById(R.id.tvHomeCourseInfo);
+            imgThumbnail = itemView.findViewById(R.id.imgCourseThumbnail);
+            tvTitle = itemView.findViewById(R.id.tvCourseTitle);
+            tvDuration = itemView.findViewById(R.id.tvDuration);
+            tvLessons = itemView.findViewById(R.id.tvLessons);
         }
     }
 }

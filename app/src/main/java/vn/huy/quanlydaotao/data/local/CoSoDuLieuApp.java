@@ -6,15 +6,18 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import vn.huy.quanlydaotao.data.local.dao.KhoaHocDao;
 import vn.huy.quanlydaotao.data.local.dao.LopHocDao;
+import vn.huy.quanlydaotao.data.local.dao.BaiHocDao;
 import vn.huy.quanlydaotao.data.local.entity.KhoaHocEntity;
 import vn.huy.quanlydaotao.data.local.entity.LopHocEntity;
+import vn.huy.quanlydaotao.data.local.entity.BaiHocEntity;
 
-@Database(entities = {KhoaHocEntity.class, LopHocEntity.class}, version = 2, exportSchema = false)
+@Database(entities = {KhoaHocEntity.class, LopHocEntity.class, BaiHocEntity.class}, version = 2, exportSchema = false)
 public abstract class CoSoDuLieuApp extends RoomDatabase {
     private static CoSoDuLieuApp instance;
 
     public abstract KhoaHocDao khoaHocDao();
     public abstract LopHocDao lopHocDao();
+    public abstract BaiHocDao baiHocDao();
 
     public static synchronized CoSoDuLieuApp getInstance(Context context) {
         if (instance == null) {

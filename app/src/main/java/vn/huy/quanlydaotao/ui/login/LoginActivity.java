@@ -13,6 +13,7 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.lifecycle.ViewModelProvider;
 
 import vn.huy.quanlydaotao.R;
+import vn.huy.quanlydaotao.data.remote.dto.LoginResponse;
 import vn.huy.quanlydaotao.ui.main.MainActivity;
 import vn.huy.quanlydaotao.data.local.TokenManager;
 
@@ -62,14 +63,21 @@ public class LoginActivity extends AppCompatActivity {
 
         loginViewModel.layKetQuaDangNhap().observe(this, phanHoi -> {
             if (phanHoi != null && phanHoi.laThanhCong()) {
-                String token = phanHoi.layDuLieu().layToken();
-                quanLyToken.luuToken(token);
+                LoginResponse.DuLieuNguoiDung user = phanHoi.layDuLieu();
 
-                Toast.makeText(this, phanHoi.layThongBao(), Toast.LENGTH_SHORT).show();
+                android.util.Log.d("DEBUG_DATA", "Ho Ten: " + user.layHoTen());
+                android.util.Log.d("DEBUG_DATA", "Vai Tro: " + user.layTenVaiTro());
+                quanLyToken.luuThongTinDangNhap(
+                        user.layToken(),
+                        user.layHoTen(),
+                        user.layTenVaiTro()
+                );
+
+                Toast.makeText(this, "Chào mừng " + user.layHoTen(), Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
-            } else{
-                Toast.makeText(this, phanHoi.layThongBao(), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, phanHoi != null ? phanHoi.layThongBao() : "Lỗi", Toast.LENGTH_SHORT).show();
             }
         });
 
