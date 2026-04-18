@@ -6,6 +6,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
@@ -47,6 +50,22 @@ public class BaiHocFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        View header = view.findViewById(R.id.layoutHeader);
+
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            if (header != null) {
+
+                int pLeft = header.getPaddingLeft();
+                int pRight = header.getPaddingRight();
+                int pBottom = header.getPaddingBottom();
+
+                header.setPadding(pLeft, systemBars.top + 20, pRight, pBottom);
+            }
+
+            return WindowInsetsCompat.CONSUMED; // Trả về CONSUMED để báo đã xử lý xong
+        });
         view.findViewById(R.id.btnBack).setOnClickListener(v -> requireActivity().onBackPressed());
         RecyclerView rv = view.findViewById(R.id.rvBaiHoc);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));

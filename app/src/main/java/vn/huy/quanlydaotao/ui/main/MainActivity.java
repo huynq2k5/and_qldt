@@ -1,5 +1,6 @@
 package vn.huy.quanlydaotao.ui.main;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.NavOptions;
@@ -30,14 +32,22 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        // Đặt lệnh này trước setContentView
+        WindowCompat.setDecorFitsSystemWindows(getWindow(), false);
+
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
+        getWindow().setNavigationBarColor(Color.TRANSPARENT);
         setContentView(R.layout.activity_main);
 
         // Xử lý Window Insets cho ID "main"
+        // Sửa đoạn xử lý Window Insets trong onCreate của MainActivity
         View mainView = findViewById(R.id.main);
         if (mainView != null) {
             ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
                 Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-                v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+                // CHỈ đặt padding Left, Right và Bottom (cho thanh điều hướng)
+                // Tuyệt đối để Top = 0 để Fragment có thể lấn lên Status Bar
+                v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
                 return insets;
             });
         }

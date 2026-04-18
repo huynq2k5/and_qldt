@@ -9,6 +9,9 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.huy.quanlydaotao.R;
+import vn.huy.quanlydaotao.ui.main.DialogHelper;
 import vn.huy.quanlydaotao.ui.quiz.QuizActivity;
 
 public class LuyenTapFragment extends Fragment {
@@ -37,7 +41,21 @@ public class LuyenTapFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        View header = view.findViewById(R.id.layoutHeader);
 
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            if (header != null) {
+                int pLeft = header.getPaddingLeft();
+                int pRight = header.getPaddingRight();
+                int pBottom = header.getPaddingBottom();
+
+                header.setPadding(pLeft, systemBars.top + 20, pRight, pBottom);
+            }
+
+            return WindowInsetsCompat.CONSUMED; // Trả về CONSUMED để báo đã xử lý xong
+        });
         rvPracticeQuizzes = view.findViewById(R.id.rvPracticeQuizzes);
         setupRecyclerView();
         loadData();
@@ -62,16 +80,19 @@ public class LuyenTapFragment extends Fragment {
     }
 
     private void showConfirmDialog(PracticeAdapter.PracticeItem item) {
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Xác nhận")
-                .setMessage("Bạn có muốn bắt đầu bài " + item.getTitle() + " không?")
-                .setPositiveButton("Bắt đầu", (dialog, which) -> {
+        DialogHelper.showConfirmDialog(
+                requireContext(),
+                "Xác nhận",
+                "Bạn có muốn bắt đầu bài " + item.getTitle() + " không?",
+                "Bắt đầu",
+                "Thoát",
+                () -> {
                     Intent intent = new Intent(getActivity(), QuizActivity.class);
                     // Có thể truyền thêm dữ liệu bài kiểm tra qua intent nếu cần
                     intent.putExtra("QUIZ_TITLE", item.getTitle());
                     startActivity(intent);
-                })
-                .setNegativeButton("Hủy", null)
-                .show();
+                }
+        );
     }
+
 }

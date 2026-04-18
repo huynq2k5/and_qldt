@@ -70,7 +70,8 @@ public class LoginActivity extends AppCompatActivity {
                 quanLyToken.luuThongTinDangNhap(
                         user.layToken(),
                         user.layHoTen(),
-                        user.layTenVaiTro()
+                        user.layTenVaiTro(),
+                        user.layEmail()
                 );
 
                 Toast.makeText(this, "Chào mừng " + user.layHoTen(), Toast.LENGTH_SHORT).show();

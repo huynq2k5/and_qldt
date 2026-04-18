@@ -7,9 +7,10 @@ public class TokenManager {
     private static final String TEN_UU_TIEN = "AppPrefs";
     private static final String KHOA_TOKEN = "api_token";
     private static final String KHOA_HO_TEN = "user_name";
+    private static final String KHOA_EMAIL = "email";
     private static final String KHOA_VAI_TRO = "user_role";
     private static final String KHOA_THOI_GIAN_DANG_NHAP = "login_time";
-    private static final long THOI_GIAN_HET_HAN = 3 * 24 * 60 * 60 * 1000L;
+    private static final long THOI_GIAN_HET_HAN = 10 * 24 * 60 * 60 * 1000L;
 
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
@@ -19,11 +20,12 @@ public class TokenManager {
         editor = sharedPreferences.edit();
     }
 
-    public void luuThongTinDangNhap(String token, String hoTen, String vaiTro) {
+    public void luuThongTinDangNhap(String token, String hoTen, String vaiTro, String email) {
         editor.putString(KHOA_TOKEN, token);
         editor.putString(KHOA_HO_TEN, hoTen);
         editor.putString(KHOA_VAI_TRO, vaiTro);
         editor.putLong(KHOA_THOI_GIAN_DANG_NHAP, System.currentTimeMillis());
+        editor.putString(KHOA_EMAIL, email);
         editor.apply();
     }
 
@@ -33,6 +35,9 @@ public class TokenManager {
 
     public String layHoTen() {
         return sharedPreferences.getString(KHOA_HO_TEN, "Người dùng");
+    }
+    public String layEmail() {
+        return sharedPreferences.getString(KHOA_EMAIL, "mail");
     }
 
     public boolean tokenHopLe() {
