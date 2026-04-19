@@ -77,29 +77,6 @@
                     android:src="@drawable/ic_time"
                     app:tint="#64748B" />
 
-                <TextView
-                    android:id="@+id/tvDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:text="2 giờ 30 phút"
-                    android:textColor="#64748B"
-                    android:textSize="12sp" />
-
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="4dp"
-                    android:layout_marginHorizontal="8dp"
-                    android:background="@drawable/bg_circle"
-                    android:backgroundTint="#CBD5E1" />
-
-                <TextView
-                    android:id="@+id/tvLessons"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="12 bài học"
-                    android:textColor="#64748B"
-                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -45,8 +45,6 @@ public class HomeCourseAdapter extends RecyclerView.Adapter<HomeCourseAdapter.Vi
         KhoaHoc item = items.get(position);
         holder.tvTitle.setText(item.getTenKhoaHoc());
 
-        holder.tvDuration.setText("2 giờ 30 phút");
-        holder.tvLessons.setText("12 bài học");
 
         holder.imgThumbnail.setImageResource(R.drawable.bg_3d_placeholder);
 
@@ -64,14 +62,12 @@ public class HomeCourseAdapter extends RecyclerView.Adapter<HomeCourseAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgThumbnail;
-        TextView tvTitle, tvDuration, tvLessons;
+        TextView tvTitle;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgThumbnail = itemView.findViewById(R.id.imgCourseThumbnail);
             tvTitle = itemView.findViewById(R.id.tvCourseTitle);
-            tvDuration = itemView.findViewById(R.id.tvDuration);
-            tvLessons = itemView.findViewById(R.id.tvLessons);
         }
     }
 }

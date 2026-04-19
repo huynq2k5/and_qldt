@@ -161,6 +161,26 @@
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="18sp" />
 
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerHomeCourses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:paddingHorizontal="18dp"
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1200">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <include layout="@layout/item_course_card_skeleton" />
+                    <include layout="@layout/item_course_card_skeleton" />
+                    <include layout="@layout/item_course_card_skeleton" />
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvHomeCourses"
                 android:layout_width="match_parent"
@@ -169,6 +189,7 @@
                 android:orientation="horizontal"
                 android:paddingHorizontal="18dp"
                 android:paddingTop="16dp"
+                android:visibility="gone"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_course_card_modern" />
 

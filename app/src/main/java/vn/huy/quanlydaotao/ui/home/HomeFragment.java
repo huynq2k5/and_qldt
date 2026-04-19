@@ -17,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import vn.huy.quanlydaotao.R;
@@ -35,6 +36,8 @@ public class HomeFragment extends Fragment {
     private TextView tvActiveCourseTitle;
     private LinearProgressIndicator courseProgress;
     private TokenManager tokenManager;
+    private ShimmerFrameLayout shimmerHomeCourses;
+    private RecyclerView rvHomeCourses;
 
     public HomeFragment() {}
 
@@ -64,6 +67,11 @@ public class HomeFragment extends Fragment {
     private void initViews(View view) {
         tokenManager = new TokenManager(requireContext());
 
+        shimmerHomeCourses = view.findViewById(R.id.shimmerHomeCourses);
+        rvHomeCourses = view.findViewById(R.id.rvHomeCourses);
+        if (shimmerHomeCourses != null) {
+            shimmerHomeCourses.startShimmer();
+        }
         tvActiveCourseTitle = view.findViewById(R.id.tvActiveCourseTitle);
         courseProgress = view.findViewById(R.id.courseProgress);
 
@@ -114,11 +122,35 @@ public class HomeFragment extends Fragment {
             if (danhSach != null && !danhSach.isEmpty()) {
                 courseAdapter.setItems(danhSach);
 
+                if (shimmerHomeCourses != null) {
+                    shimmerHomeCourses.stopShimmer();
+                    shimmerHomeCourses.setVisibility(View.GONE);
+                }
+                if (rvHomeCourses != null) {
+                    rvHomeCourses.setVisibility(View.VISIBLE);
+                }
+
                 tvActiveCourseTitle.setText(danhSach.get(0).getTenKhoaHoc());
                 courseProgress.setProgress(65, true);
             }
         });
 
         khoaHocViewModel.taiLaiDuLieu();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (shimmerHomeCourses != null && shimmerHomeCourses.getVisibility() == View.VISIBLE) {
+            shimmerHomeCourses.startShimmer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (shimmerHomeCourses != null) {
+            shimmerHomeCourses.stopShimmer();
+        }
+        super.onPause();
     }
 }

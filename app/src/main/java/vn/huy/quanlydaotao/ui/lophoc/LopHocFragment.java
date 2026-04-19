@@ -33,6 +33,8 @@ public class LopHocFragment extends Fragment {
     private LopHocViewModel viewModel;
     private LopHocAdapter adapter;
     private int idKhoaHoc;
+    private com.facebook.shimmer.ShimmerFrameLayout shimmerLopHoc;
+    private RecyclerView rvLopHoc;
 
     public LopHocFragment() {}
 
@@ -53,6 +55,17 @@ public class LopHocFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        shimmerLopHoc = view.findViewById(R.id.shimmerLopHoc);
+        rvLopHoc = view.findViewById(R.id.rvLopHoc);
+
+        if (shimmerLopHoc != null) {
+            shimmerLopHoc.setVisibility(View.VISIBLE);
+            shimmerLopHoc.startShimmer();
+        }
+
+        if (rvLopHoc != null) {
+            rvLopHoc.setVisibility(View.GONE);
+        }
         View header = view.findViewById(R.id.layoutHeader);
 
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
@@ -70,8 +83,6 @@ public class LopHocFragment extends Fragment {
             return WindowInsetsCompat.CONSUMED; // Trả về CONSUMED để báo đã xử lý xong
         });
         view.findViewById(R.id.btnBack).setOnClickListener(v -> requireActivity().onBackPressed());
-
-        RecyclerView rvLopHoc = view.findViewById(R.id.rvLopHoc);
         rvLopHoc.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new LopHocAdapter();
         rvLopHoc.setAdapter(adapter);
@@ -125,12 +136,46 @@ public class LopHocFragment extends Fragment {
             }
         }).get(LopHocViewModel.class);
 
+        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
+            if (loading != null && !loading) {
+                new android.os.Handler().postDelayed(() -> {
+                    if (shimmerLopHoc != null) {
+
+                        shimmerLopHoc.setVisibility(View.GONE);
+                    }
+                    rvLopHoc.setVisibility(View.VISIBLE);
+                }, 600);
+            } else {
+                shimmerLopHoc.setVisibility(View.VISIBLE);
+                shimmerLopHoc.startShimmer();
+                rvLopHoc.setVisibility(View.GONE);
+            }
+        });
+
         viewModel.layDanhSachLopHoc(idKhoaHoc).observe(getViewLifecycleOwner(), lops -> {
-            if (lops != null) {
+            if (lops != null && !lops.isEmpty()) {
                 adapter.setItems(lops);
+                viewModel.setFinishedLoading();
             }
         });
 
         viewModel.taiLaiDuLieu(idKhoaHoc);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // Nếu vẫn đang trong trạng thái loading thì chạy lại hiệu ứng
+        if (shimmerLopHoc != null && shimmerLopHoc.getVisibility() == View.VISIBLE) {
+            shimmerLopHoc.startShimmer();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        if (shimmerLopHoc != null) {
+            shimmerLopHoc.stopShimmer();
+        }
+        super.onPause();
     }
 }
