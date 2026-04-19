@@ -20,18 +20,26 @@ public class LoginResponse {
         @SerializedName("token")
         private String token;
 
+        @SerializedName("id")
+        private int id;
+
         @SerializedName("ho_ten")
         private String hoTen;
 
         @SerializedName("email")
         private String email;
 
+        @SerializedName("token_mobile")
+        private String tokenMobile;
+
         @SerializedName("ten_vai_tro")
         private String tenVaiTro;
 
         public String layToken() { return token; }
+        public int layId() { return id; }
         public String layHoTen() { return hoTen; }
         public String layEmail() { return email; }
+        public String layTokenMobile() { return tokenMobile; }
         public String layTenVaiTro() { return tenVaiTro; }
     }
 }

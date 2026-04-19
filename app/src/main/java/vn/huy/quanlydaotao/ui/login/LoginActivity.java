@@ -65,20 +65,18 @@ public class LoginActivity extends AppCompatActivity {
             if (phanHoi != null && phanHoi.laThanhCong()) {
                 LoginResponse.DuLieuNguoiDung user = phanHoi.layDuLieu();
 
-                android.util.Log.d("DEBUG_DATA", "Ho Ten: " + user.layHoTen());
-                android.util.Log.d("DEBUG_DATA", "Vai Tro: " + user.layTenVaiTro());
                 quanLyToken.luuThongTinDangNhap(
                         user.layToken(),
+                        user.layId(),
                         user.layHoTen(),
                         user.layTenVaiTro(),
-                        user.layEmail()
+                        user.layEmail(),
+                        user.layTokenMobile()
                 );
 
                 Toast.makeText(this, "Chào mừng " + user.layHoTen(), Toast.LENGTH_SHORT).show();
                 startActivity(new Intent(this, MainActivity.class));
                 finish();
-            } else {
-                Toast.makeText(this, phanHoi != null ? phanHoi.layThongBao() : "Lỗi", Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -19,10 +19,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
+import vn.huy.quanlydaotao.data.local.TokenManager;
 import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
 import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.LopHocRepositoryImpl;
 import vn.huy.quanlydaotao.domain.usecase.LayDanhSachLopHocUseCase;
+import vn.huy.quanlydaotao.ui.lophoc.dangky.DangKyLopBottomSheet;
 
 public class LopHocFragment extends Fragment {
 
@@ -73,12 +75,38 @@ public class LopHocFragment extends Fragment {
         rvLopHoc.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new LopHocAdapter();
         rvLopHoc.setAdapter(adapter);
-        adapter.setOnLopHocClickListener(idKhoaHoc -> {
-            Bundle bundle = new Bundle();
-            bundle.putInt("id_khoa_hoc", idKhoaHoc);
+        adapter.setOnLopHocClickListener(lopHoc -> {
+            TokenManager tokenManager = new TokenManager(requireContext());
+            int idNguoiDung = tokenManager.layId();
+            android.util.Log.d("HUY_DEBUG", "2. ID người dùng lấy từ Token: " + idNguoiDung);
+            new Thread(() -> {
+                try {
+                    CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(requireContext());
+                    if (db.dangKyLopDao() == null) {
+                        android.util.Log.e("HUY_DEBUG", "LỖI: dangKyLopDao bị NULL!");
+                    }
+                    boolean daDangKy = db.dangKyLopDao().isDaDangKy(idNguoiDung, lopHoc.getId());
 
-            androidx.navigation.Navigation.findNavController(view)
-                    .navigate(R.id.navigation_bai_hoc, bundle);
+                    requireActivity().runOnUiThread(() -> {
+                        if (daDangKy) {
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("id_khoa_hoc", lopHoc.getIdKhoaHoc());
+
+                            androidx.navigation.Navigation.findNavController(view)
+                                    .navigate(R.id.navigation_bai_hoc, bundle);
+                        } else {
+                            DangKyLopBottomSheet sheet = DangKyLopBottomSheet.newInstance(
+                                    lopHoc.getId(),
+                                    lopHoc.getTenLop()
+                            );
+                            sheet.show(getChildFragmentManager(), "DangKySheet");
+                        }
+                    });
+                } catch (Exception e) {
+                    android.util.Log.e("HUY_DEBUG", "LỖI TRONG THREAD: " + e.getMessage());
+                    e.printStackTrace();
+                }
+            }).start();
         });
         // Manual DI for ViewModel
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);

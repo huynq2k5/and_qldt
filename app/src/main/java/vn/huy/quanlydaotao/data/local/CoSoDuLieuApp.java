@@ -4,16 +4,23 @@ import android.content.Context;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
+
+import vn.huy.quanlydaotao.data.local.dao.DangKyLopDao;
 import vn.huy.quanlydaotao.data.local.dao.KhoaHocDao;
 import vn.huy.quanlydaotao.data.local.dao.LichMeetDao;
 import vn.huy.quanlydaotao.data.local.dao.LopHocDao;
 import vn.huy.quanlydaotao.data.local.dao.BaiHocDao;
+import vn.huy.quanlydaotao.data.local.entity.DangKyLopEntity;
 import vn.huy.quanlydaotao.data.local.entity.KhoaHocEntity;
 import vn.huy.quanlydaotao.data.local.entity.LichMeetEntity;
 import vn.huy.quanlydaotao.data.local.entity.LopHocEntity;
 import vn.huy.quanlydaotao.data.local.entity.BaiHocEntity;
 
-@Database(entities = {KhoaHocEntity.class, LopHocEntity.class, BaiHocEntity.class, LichMeetEntity.class}, version = 3, exportSchema = false)
+@Database(entities = {KhoaHocEntity.class,
+        LopHocEntity.class,
+        BaiHocEntity.class,
+        LichMeetEntity.class,
+        DangKyLopEntity.class}, version = 4, exportSchema = false)
 public abstract class CoSoDuLieuApp extends RoomDatabase {
     private static CoSoDuLieuApp instance;
 
@@ -21,6 +28,7 @@ public abstract class CoSoDuLieuApp extends RoomDatabase {
     public abstract LopHocDao lopHocDao();
     public abstract BaiHocDao baiHocDao();
     public abstract LichMeetDao lichMeetDao();
+    public abstract DangKyLopDao dangKyLopDao();
     public static synchronized CoSoDuLieuApp getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),
