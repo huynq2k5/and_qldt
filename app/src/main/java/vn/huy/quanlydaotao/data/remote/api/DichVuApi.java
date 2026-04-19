@@ -6,6 +6,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 import vn.huy.quanlydaotao.data.remote.dto.BaiHocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.KhoaHocResponse;
+import vn.huy.quanlydaotao.data.remote.dto.LichMeetResponse;
 import vn.huy.quanlydaotao.data.remote.dto.LopHocResponse;
 
 public interface DichVuApi {
@@ -17,4 +18,6 @@ public interface DichVuApi {
 
     @GET("lay_bai_hoc.php")
     Call<List<BaiHocResponse>> getDanhSachBaiHoc(@Query("id_khoa_hoc") int idKhoaHoc);
+    @GET("lay_lich_hoc.php")
+    Call<List<LichMeetResponse>> getDanhSachLichMeet(@Query("id_lop_hoc") int idLopHoc);
 }
