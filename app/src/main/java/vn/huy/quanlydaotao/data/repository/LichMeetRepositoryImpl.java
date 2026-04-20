@@ -1,11 +1,10 @@
 package vn.huy.quanlydaotao.data.repository;
 
+import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,55 +16,61 @@ import vn.huy.quanlydaotao.domain.model.LichMeet;
 import vn.huy.quanlydaotao.domain.repository.ILichMeetRepository;
 
 public class LichMeetRepositoryImpl implements ILichMeetRepository {
-    private LichMeetDao lichMeetDao;
-    private DichVuApi api;
 
-    public LichMeetRepositoryImpl(LichMeetDao dao, DichVuApi api) {
-        this.lichMeetDao = dao;
+    private final LichMeetDao lichMeetDao;
+    private final DichVuApi api;
+
+    public LichMeetRepositoryImpl(LichMeetDao lichMeetDao, DichVuApi api) {
+        this.lichMeetDao = lichMeetDao;
         this.api = api;
     }
 
     @Override
-    public LiveData<List<LichMeet>> getDanhSachLichMeet(int idLopHoc) {
-        return Transformations.map(lichMeetDao.getAllLichMeet(), entities -> {
-            List<LichMeet> models = new ArrayList<>();
-            for (LichMeetEntity entity : entities) {
-                models.add(new LichMeet(entity.id, entity.idLopHoc, entity.tieuDe, entity.linkMeet, entity.thoiGian));
-            }
-            return models;
-        });
-    }
-
-    @Override
-    public void lamMoiLichMeet(int idLopHoc) {
-        android.util.Log.d("HUY_DEBUG", "Đã vào tới Repository, ID lớp: " + idLopHoc);
-        api.getDanhSachLichMeet(idLopHoc).enqueue(new Callback<List<LichMeetResponse>>() {
+    public void dongBoLichHoc(int idNguoiDung) {
+        api.getLichMeetDaDangKy(idNguoiDung).enqueue(new Callback<LichMeetResponse>() {
             @Override
-            public void onResponse(Call<List<LichMeetResponse>> call, Response<List<LichMeetResponse>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    android.util.Log.d("HUY_DEBUG", "Lấy được " + response.body().size() + " lịch meet");
+            public void onResponse(Call<LichMeetResponse> call, Response<LichMeetResponse> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     new Thread(() -> {
                         List<LichMeetEntity> entities = new ArrayList<>();
-                        for (LichMeetResponse dto : response.body()) {
-                            LichMeetEntity entity = new LichMeetEntity();
-                            entity.id = dto.getId();
-                            entity.idLopHoc = dto.getIdLopHoc();
-                            entity.tieuDe = dto.getTieuDe();
-                            entity.linkMeet = dto.getLinkMeet();
-                            entity.thoiGian = dto.getThoiGian();
-                            entities.add(entity);
+                        for (LichMeetResponse.LichMeetDTO dto : response.body().getData()) {
+                            entities.add(new LichMeetEntity(
+                                    dto.getId(),
+                                    dto.getIdLopHoc(),
+                                    dto.getTenLop(),
+                                    dto.getTieuDe(),
+                                    dto.getLinkMeet(),
+                                    dto.getThoiGian()
+                            ));
                         }
+                        lichMeetDao.deleteAll();
                         lichMeetDao.insertAll(entities);
                     }).start();
-                }else{
-                    android.util.Log.d("HUY_DEBUG", "Server trả lỗi: " + response.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<List<LichMeetResponse>> call, Throwable t) {
-                android.util.Log.d("HUY_DEBUG", "Lỗi Retrofit: " + t.getMessage());
+            public void onFailure(Call<LichMeetResponse> call, Throwable t) {
+                Log.e("HUY_DEBUG", "Lỗi đồng bộ lịch: " + t.getMessage());
             }
+        });
+    }
+
+    @Override
+    public LiveData<List<LichMeet>> getLichHocCuaToiLocal() {
+        return Transformations.map(lichMeetDao.getAllLichHoc(), entities -> {
+            List<LichMeet> models = new ArrayList<>();
+            for (LichMeetEntity entity : entities) {
+                // SỬA LẠI THỨ TỰ Ở ĐÂY:
+                models.add(new LichMeet(
+                        entity.id,           // 1. id
+                        entity.tenLop,       // 2. tenLop
+                        entity.tieuDe,       // 3. tieuDe (Cái này hiện đang bị nhầm thành thoiGian)
+                        entity.linkMeet,     // 4. linkMeet
+                        entity.thoiGian      // 5. thoiGian (Cái này hiện đang bị nhầm thành linkMeet)
+                ));
+            }
+            return models;
         });
     }
 }

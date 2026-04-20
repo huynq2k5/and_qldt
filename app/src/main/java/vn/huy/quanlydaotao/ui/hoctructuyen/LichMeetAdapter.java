@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;
 import vn.huy.quanlydaotao.R;
@@ -40,15 +39,17 @@ public class LichMeetAdapter extends RecyclerView.Adapter<LichMeetAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LichMeet item = items.get(position);
+
         holder.tvTitle.setText(item.getTieuDe());
+        holder.tvTenLop.setText(item.getTenLop());
 
         String rawTime = item.getThoiGian();
         if (rawTime != null && rawTime.length() >= 16) {
-            String hour = rawTime.substring(11, 16);
-            String date = rawTime.substring(8, 10) + "/" + rawTime.substring(5, 7);
+            String datePart = rawTime.substring(8, 10) + "/" + rawTime.substring(5, 7);
+            String timePart = rawTime.substring(11, 16);
 
-            holder.tvMeetHour.setText(hour);
-            holder.tvMeetDate.setText(date);
+            holder.tvMeetDate.setText(datePart);
+            holder.tvMeetHour.setText(timePart);
         }
 
         holder.btnJoin.setOnClickListener(v -> {
@@ -64,12 +65,13 @@ public class LichMeetAdapter extends RecyclerView.Adapter<LichMeetAdapter.ViewHo
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvTitle, tvMeetHour, tvMeetDate;
-        TextView btnJoin;
+        TextView tvTitle, tvTenLop, tvMeetHour, tvMeetDate;
+        View btnJoin;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tvMeetTitle);
+            tvTenLop = itemView.findViewById(R.id.tvTenLop); // Huy bổ sung ID này vào layout nhé
             tvMeetHour = itemView.findViewById(R.id.tvMeetHour);
             tvMeetDate = itemView.findViewById(R.id.tvMeetDate);
             btnJoin = itemView.findViewById(R.id.btnJoinMeet);

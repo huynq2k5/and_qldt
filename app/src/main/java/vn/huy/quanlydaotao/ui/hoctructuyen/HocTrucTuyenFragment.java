@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -26,50 +25,59 @@ import java.util.Locale;
 
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
+import vn.huy.quanlydaotao.data.local.TokenManager;
 import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
 import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.LichMeetRepositoryImpl;
-import vn.huy.quanlydaotao.data.repository.LopHocRepositoryImpl;
 import vn.huy.quanlydaotao.domain.model.LichMeet;
-import vn.huy.quanlydaotao.domain.usecase.LayDanhSachLichMeetUseCase;
-import vn.huy.quanlydaotao.domain.usecase.LayDanhSachLopHocUseCase;
+import vn.huy.quanlydaotao.domain.usecase.LayLichMeetUseCase;
 
 public class HocTrucTuyenFragment extends Fragment {
 
     private LichMeetAdapter adapter;
     private HocTrucTuyenViewModel viewModel;
-    private int idLopHoc;
+    private TokenManager tokenManager;
+    private int idNguoiDung;
 
     public HocTrucTuyenFragment() {}
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            idLopHoc = getArguments().getInt("id_lop_hoc", 0);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_hoc_truc_tuyen, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        android.util.Log.d("HUY_DEBUG", "Fragment đã onViewCreated");
 
         View header = view.findViewById(R.id.layoutHeader);
+
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
             Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
             if (header != null) {
-                header.setPadding(header.getPaddingLeft(), systemBars.top,
-                        header.getPaddingRight(), header.getPaddingBottom());
+                int pLeft = header.getPaddingLeft();
+                int pRight = header.getPaddingRight();
+                int pBottom = header.getPaddingBottom();
+
+                header.setPadding(pLeft, systemBars.top + 20, pRight, pBottom);
             }
-            return windowInsets;
+
+            return WindowInsetsCompat.CONSUMED; // Trả về CONSUMED để báo đã xử lý xong
         });
+
+        tokenManager = new TokenManager(requireContext());
+        idNguoiDung = tokenManager.layId();
+
+        setupRecyclerView(view);
+        setupViewModel();
+
+        if (tokenManager.tokenHopLe() && idNguoiDung > 0) {
+            observeData();
+        } else {
+            Toast.makeText(getContext(), "Phiên đăng nhập hết hạn!", Toast.LENGTH_SHORT).show();
+            //có thể điều hướng về màn hình Login ở đây nếu cần
+        }
 
         setupRecyclerView(view);
         setupViewModel();
@@ -84,10 +92,9 @@ public class HocTrucTuyenFragment extends Fragment {
 
         adapter.setOnBtnJoinClickListener(link -> {
             if (link != null && !link.isEmpty()) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
-                startActivity(intent);
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
             } else {
-                Toast.makeText(getContext(), "Link họp không hợp lệ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Link không khả dụng", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -95,82 +102,64 @@ public class HocTrucTuyenFragment extends Fragment {
     private void setupViewModel() {
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(requireContext());
-
-        LichMeetRepositoryImpl lichRepo = new LichMeetRepositoryImpl(db.lichMeetDao(), api);
-        LayDanhSachLichMeetUseCase lichUseCase = new LayDanhSachLichMeetUseCase(lichRepo);
-
-        LopHocRepositoryImpl lopRepo = new LopHocRepositoryImpl(db.lopHocDao(), api);
-        LayDanhSachLopHocUseCase lopUseCase = new LayDanhSachLopHocUseCase(lopRepo);
+        LichMeetRepositoryImpl repo = new LichMeetRepositoryImpl(db.lichMeetDao(), api);
+        LayLichMeetUseCase useCase = new LayLichMeetUseCase(repo);
 
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
             @SuppressWarnings("unchecked")
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) new HocTrucTuyenViewModel(lichUseCase, lopUseCase);
+                return (T) new HocTrucTuyenViewModel(useCase);
             }
         }).get(HocTrucTuyenViewModel.class);
     }
 
     private void observeData() {
-            int testId = (idLopHoc > 0) ? idLopHoc : 1;
-
-            android.util.Log.d("HUY_DEBUG", "Bắt đầu gọi hiển thị lịch cho ID: " + testId);
-            hienThiLichTheoLop(testId);
-    }
-
-    private void hienThiLichTheoLop(int id) {
-        viewModel.getDanhSachLichMeet(idLopHoc).observe(getViewLifecycleOwner(), lichMeets -> {
-            if (lichMeets != null && !lichMeets.isEmpty()) {
+        viewModel.getDanhSachLichMeet(idNguoiDung).observe(getViewLifecycleOwner(), lichMeets -> {
+            if (lichMeets != null) {
                 adapter.setItems(lichMeets);
-
-                View layoutLive = getView().findViewById(R.id.layoutLiveNow);
-                if (checkNeuCoLopLive(lichMeets)) {
-                    layoutLive.setVisibility(View.VISIBLE);
-                } else {
-                    layoutLive.setVisibility(View.GONE);
-                }
+                updateLiveCard(lichMeets);
             }
         });
-        viewModel.taiLaiDuLieu(id);
     }
-    private boolean checkNeuCoLopLive(List<LichMeet> lichMeets) {
-        if (lichMeets == null || lichMeets.isEmpty()) return false;
 
+    private void updateLiveCard(List<LichMeet> lichMeets) {
+        View layoutLive = getView().findViewById(R.id.layoutLiveNow);
+        LichMeet currentLive = findCurrentLiveClass(lichMeets);
+
+        if (currentLive != null) {
+            layoutLive.setVisibility(View.VISIBLE);
+            doDuLieuVaoCardLive(currentLive);
+        } else {
+            layoutLive.setVisibility(View.GONE);
+        }
+    }
+
+    private LichMeet findCurrentLiveClass(List<LichMeet> lichMeets) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        long gioHienTai = System.currentTimeMillis();
-        long motTiengRuoi = 90 * 60 * 1000;
+        long now = System.currentTimeMillis();
+        long duration = 90 * 60 * 1000; // 1 tiếng 30 phút
 
         for (LichMeet item : lichMeets) {
             try {
-                Date thoiDiemBatDau = sdf.parse(item.getThoiGian());
-                if (thoiDiemBatDau != null) {
-                    long batDauMilis = thoiDiemBatDau.getTime();
-                    long ketThucMilis = batDauMilis + motTiengRuoi;
-
-                    if (gioHienTai >= batDauMilis && gioHienTai <= ketThucMilis) {
-                        doDuLieuVaoCardLive(item);
-                        return true;
+                Date startTime = sdf.parse(item.getThoiGian());
+                if (startTime != null) {
+                    long startMilis = startTime.getTime();
+                    if (now >= startMilis && now <= (startMilis + duration)) {
+                        return item;
                     }
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
-        return false;
+        return null;
     }
 
     private void doDuLieuVaoCardLive(LichMeet item) {
-        View view = getView();
-        if (view == null) return;
+        TextView tvTitle = getView().findViewById(R.id.tvLiveTitle);
+        View btnJoin = getView().findViewById(R.id.btnJoinLive);
 
-        TextView tvLiveTitle = view.findViewById(R.id.tvLiveTitle);
-        com.google.android.material.button.MaterialButton btnJoin = view.findViewById(R.id.btnJoinLive);
-
-        tvLiveTitle.setText(item.getTieuDe());
-        btnJoin.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLinkMeet()));
-            startActivity(intent);
-        });
+        tvTitle.setText(item.getTieuDe());
+        btnJoin.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLinkMeet()))));
     }
 }

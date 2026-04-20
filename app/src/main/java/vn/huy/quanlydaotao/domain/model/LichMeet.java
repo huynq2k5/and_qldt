@@ -1,15 +1,15 @@
 package vn.huy.quanlydaotao.domain.model;
 
 public class LichMeet {
-    private int id;
-    private int idLopHoc;
-    private String tieuDe;
-    private String linkMeet;
-    private String thoiGian;
+    private final int id;
+    private final String tenLop;
+    private final String tieuDe;
+    private final String linkMeet;
+    private final String thoiGian;
 
-    public LichMeet(int id, int idLopHoc, String tieuDe, String linkMeet, String thoiGian) {
+    public LichMeet(int id, String tenLop, String tieuDe, String linkMeet, String thoiGian) {
         this.id = id;
-        this.idLopHoc = idLopHoc;
+        this.tenLop = tenLop;
         this.tieuDe = tieuDe;
         this.linkMeet = linkMeet;
         this.thoiGian = thoiGian;
@@ -19,8 +19,8 @@ public class LichMeet {
         return id;
     }
 
-    public int getIdLopHoc() {
-        return idLopHoc;
+    public String getTenLop() {
+        return tenLop;
     }
 
     public String getTieuDe() {
