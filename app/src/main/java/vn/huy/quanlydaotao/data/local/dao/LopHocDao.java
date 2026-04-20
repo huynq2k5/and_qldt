@@ -5,16 +5,17 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
-
 import java.util.List;
-
 import vn.huy.quanlydaotao.data.local.entity.LopHocEntity;
 
 @Dao
 public interface LopHocDao {
-    @Query("SELECT * FROM lop_hoc WHERE idKhoaHoc = :idKhoaHoc")
-    LiveData<List<LopHocEntity>> layDanhSachLopHocTheoKhoaHoc(int idKhoaHoc);
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void luuDanhSachLopHoc(List<LopHocEntity> danhSachLopHoc);
+    void insertAll(List<LopHocEntity> lopHocs);
+
+    @Query("SELECT * FROM lop_hoc WHERE id_khoa_hoc = :idKhoaHoc")
+    LiveData<List<LopHocEntity>> getLopHocByKhoaHoc(int idKhoaHoc);
+
+    @Query("DELETE FROM lop_hoc WHERE id_khoa_hoc = :idKhoaHoc")
+    void deleteByKhoaHoc(int idKhoaHoc);
 }

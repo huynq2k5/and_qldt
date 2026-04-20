@@ -1,22 +1,30 @@
 package vn.huy.quanlydaotao.ui.lophoc;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.google.android.material.button.MaterialButton;
 import java.util.ArrayList;
 import java.util.List;
-
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.domain.model.LopHoc;
 
 public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder> {
 
     private List<LopHoc> items = new ArrayList<>();
+    private OnLopHocClickListener listener;
+
+    public interface OnLopHocClickListener {
+        void onLopHocClick(LopHoc lopHoc);
+    }
+
+    public void setOnLopHocClickListener(OnLopHocClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setItems(List<LopHoc> items) {
         this.items = items;
@@ -34,15 +42,21 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         LopHoc item = items.get(position);
         holder.tvTenLop.setText(item.getTenLop());
+        holder.tvThoiGian.setText(item.getNgayBatDau() + " - " + item.getNgayKetThuc());
 
-        // SỬA TẠI ĐÂY: Truyền nguyên đối tượng item (LopHoc) thay vì chỉ truyền ID
-        holder.btnVaoHoc.setOnClickListener(v -> {
+        if (item.getDaDangKy() == 1) {
+            holder.btnAction.setText("Vào học ngay");
+            holder.btnAction.setBackgroundColor(Color.parseColor("#321fdb"));
+        } else {
+            holder.btnAction.setText("Đăng ký lớp");
+            holder.btnAction.setBackgroundColor(Color.parseColor("#2eb85c"));
+        }
+
+        holder.btnAction.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onLopHocClick(item);
             }
         });
-
-        holder.tvThoiGian.setText(item.getNgayBatDau() + " - " + item.getNgayKetThuc());
     }
 
     @Override
@@ -52,24 +66,13 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTenLop, tvThoiGian;
-        View btnVaoHoc;
+        MaterialButton btnAction;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTenLop = itemView.findViewById(R.id.tvTenLop);
             tvThoiGian = itemView.findViewById(R.id.tvThoiGian);
-            btnVaoHoc = itemView.findViewById(R.id.btnVaoHoc);
+            btnAction = itemView.findViewById(R.id.btnVaoHoc);
         }
-    }
-
-    // SỬA TẠI ĐÂY: Interface nhận vào đối tượng LopHoc
-    public interface OnLopHocClickListener {
-        void onLopHocClick(LopHoc lopHoc);
-    }
-
-    private OnLopHocClickListener listener;
-
-    public void setOnLopHocClickListener(OnLopHocClickListener listener) {
-        this.listener = listener;
     }
 }

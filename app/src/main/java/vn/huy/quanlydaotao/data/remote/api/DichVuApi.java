@@ -18,7 +18,10 @@ public interface DichVuApi {
     Call<List<KhoaHocResponse>> getDanhSachKhoaHoc();
 
     @GET("api_lophoc.php")
-    Call<List<LopHocResponse>> getDanhSachLopHoc(@Query("id_khoa_hoc") int idKhoaHoc);
+    Call<LopHocResponse> getDanhSachLopHoc(
+            @Query("id_khoa_hoc") int idKhoaHoc,
+            @Query("id_nguoi_dung") int idNguoiDung
+    );
 
     @GET("lay_bai_hoc.php")
     Call<List<BaiHocResponse>> getDanhSachBaiHoc(@Query("id_khoa_hoc") int idKhoaHoc);

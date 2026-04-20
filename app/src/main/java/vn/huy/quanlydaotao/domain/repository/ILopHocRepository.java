@@ -5,6 +5,6 @@ import java.util.List;
 import vn.huy.quanlydaotao.domain.model.LopHoc;
 
 public interface ILopHocRepository {
-    LiveData<List<LopHoc>> layDanhSachLopHoc(int idKhoaHoc);
-    void lamMoiLopHoc(int idKhoaHoc);
+    void dongBoLopHoc(int idKhoaHoc, int idNguoiDung);
+    LiveData<List<LopHoc>> getDanhSachLopHocLocal(int idKhoaHoc);
 }

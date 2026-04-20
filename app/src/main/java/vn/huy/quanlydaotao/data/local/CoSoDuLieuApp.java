@@ -20,7 +20,7 @@ import vn.huy.quanlydaotao.data.local.entity.BaiHocEntity;
         LopHocEntity.class,
         BaiHocEntity.class,
         LichMeetEntity.class,
-        DangKyLopEntity.class}, version = 5, exportSchema = false)
+        DangKyLopEntity.class}, version = 6, exportSchema = false)
 public abstract class CoSoDuLieuApp extends RoomDatabase {
     private static CoSoDuLieuApp instance;
 

@@ -25,6 +25,14 @@ public class DangKyLopBottomSheet extends BottomSheetDialogFragment {
     int idNguoiDung;
     private String tenLop;
     private DangKyLopViewModel viewModel;
+    public interface OnDangKyThanhCongListener {
+        void onDangKyThanhCong();
+    }
+    private OnDangKyThanhCongListener listener;
+
+    public void setOnDangKyThanhCongListener(OnDangKyThanhCongListener listener) {
+        this.listener = listener;
+    }
 
     public static DangKyLopBottomSheet newInstance(int idLopHoc, String tenLop) {
         DangKyLopBottomSheet fragment = new DangKyLopBottomSheet();
@@ -69,6 +77,9 @@ public class DangKyLopBottomSheet extends BottomSheetDialogFragment {
                 if (response != null) {
                     if ("success".equals(response.getStatus())) {
                         Toast.makeText(getContext(), "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                        if (listener != null) {
+                            listener.onDangKyThanhCong(); // Báo hiệu về cho Fragment
+                        }
                         dismiss();
                     } else {
                         // HIỆN LỖI CHI TIẾT (Ví dụ: Foreign key constraint fails)
