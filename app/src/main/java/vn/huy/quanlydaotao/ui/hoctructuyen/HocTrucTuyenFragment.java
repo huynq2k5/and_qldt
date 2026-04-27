@@ -117,7 +117,21 @@ public class HocTrucTuyenFragment extends Fragment {
 
     private void observeData() {
         viewModel.getDanhSachLichMeet(idNguoiDung).observe(getViewLifecycleOwner(), lichMeets -> {
-            if (lichMeets != null) {
+            View layoutEmpty = getView().findViewById(R.id.layoutEmpty);
+            View rvLichMeet = getView().findViewById(R.id.rvLichMeet);
+            View layoutLive = getView().findViewById(R.id.layoutLiveNow);
+            View tvListTitle = getView().findViewById(R.id.tvListTitle);
+
+            if (lichMeets == null || lichMeets.isEmpty()) {
+                if (layoutEmpty != null) layoutEmpty.setVisibility(View.VISIBLE);
+                if (rvLichMeet != null) rvLichMeet.setVisibility(View.GONE);
+                if (layoutLive != null) layoutLive.setVisibility(View.GONE);
+                if (tvListTitle != null) tvListTitle.setVisibility(View.GONE);
+            } else {
+                if (layoutEmpty != null) layoutEmpty.setVisibility(View.GONE);
+                if (rvLichMeet != null) rvLichMeet.setVisibility(View.VISIBLE);
+                if (tvListTitle != null) tvListTitle.setVisibility(View.VISIBLE);
+
                 adapter.setItems(lichMeets);
                 updateLiveCard(lichMeets);
             }

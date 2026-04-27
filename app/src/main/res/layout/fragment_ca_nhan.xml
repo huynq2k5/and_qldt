@@ -51,14 +51,15 @@
                 android:paddingVertical="10dp">
 
                 <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgProfileAvatar"
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
-                    android:padding="4dp"
-                    android:scaleType="centerCrop"
+                    android:id="@+id/imgUser"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:padding="2dp"
                     android:src="@drawable/ic_user_placeholder"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                    app:strokeColor="@color/primary"
+                    app:strokeColor="#40C3C1C1"
                     app:strokeWidth="2dp" />
 
                 <TextView

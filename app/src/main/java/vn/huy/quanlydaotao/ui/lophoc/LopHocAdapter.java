@@ -46,7 +46,7 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
 
         if (item.getDaDangKy() == 1) {
             holder.btnAction.setText("Vào học ngay");
-            holder.btnAction.setBackgroundColor(Color.parseColor("#321fdb"));
+            holder.btnAction.setBackgroundColor(Color.parseColor("#1E3A8A"));
         } else {
             holder.btnAction.setText("Đăng ký lớp");
             holder.btnAction.setBackgroundColor(Color.parseColor("#2eb85c"));

@@ -13,21 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.huy.quanlydaotao.R;
+import vn.huy.quanlydaotao.domain.model.BaiKiemTra;
 
 public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.ViewHolder> {
 
-    private List<PracticeItem> items = new ArrayList<>();
+    private List<BaiKiemTra> items = new ArrayList<>();
     private OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        void onItemClick(PracticeItem item);
+        void onItemClick(BaiKiemTra item);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 
-    public void setItems(List<PracticeItem> items) {
+    public void setItems(List<BaiKiemTra> items) {
         this.items = items;
         notifyDataSetChanged();
     }
@@ -41,11 +42,18 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PracticeItem item = items.get(position);
-        holder.tvTitle.setText(item.getTitle());
-        holder.tvDesc.setText(item.getDescription());
-        holder.imgIcon.setImageResource(item.getIconResId());
-        
+        BaiKiemTra item = items.get(position);
+
+        // Hiển thị tiêu đề bài kiểm tra
+        holder.tvTitle.setText(item.getTieuDe());
+
+        // Hiển thị tên môn học và thời gian làm bài
+        String desc = "Môn: " + item.getTenKhoaHoc() + " | " + item.getThoiGianLam() + " phút";
+        holder.tvDesc.setText(desc);
+
+        // Sử dụng icon mặc định cho bài kiểm tra
+        holder.imgIcon.setImageResource(R.drawable.graduation_cap);
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(item);
@@ -68,21 +76,5 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.ViewHo
             tvTitle = itemView.findViewById(R.id.tvTopicTitle);
             tvDesc = itemView.findViewById(R.id.tvTopicDesc);
         }
-    }
-
-    public static class PracticeItem {
-        private String title;
-        private String description;
-        private int iconResId;
-
-        public PracticeItem(String title, String description, int iconResId) {
-            this.title = title;
-            this.description = description;
-            this.iconResId = iconResId;
-        }
-
-        public String getTitle() { return title; }
-        public String getDescription() { return description; }
-        public int getIconResId() { return iconResId; }
     }
 }
