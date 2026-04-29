@@ -134,6 +134,7 @@ public class LuyenTapFragment extends Fragment {
                     // Truyền ID bài kiểm tra để màn hình Quiz lấy danh sách câu hỏi tương ứng
                     intent.putExtra("ID_BAI_KIEM_TRA", item.getId());
                     intent.putExtra("QUIZ_TITLE", item.getTieuDe());
+                    intent.putExtra("THOI_GIAN", item.getThoiGianLam());
                     startActivity(intent);
                 }
         );

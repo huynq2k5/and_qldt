@@ -8,6 +8,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 import vn.huy.quanlydaotao.data.remote.dto.BaiKiemTraResponse;
 import vn.huy.quanlydaotao.data.remote.dto.BaiHocResponse;
+import vn.huy.quanlydaotao.data.remote.dto.CauHoiResponse;
 import vn.huy.quanlydaotao.data.remote.dto.DangKyLopRequest;
 import vn.huy.quanlydaotao.data.remote.dto.DangKyLopResponse;
 import vn.huy.quanlydaotao.data.remote.dto.KhoaHocResponse;
@@ -33,5 +34,10 @@ public interface DichVuApi {
     @GET("ds_kiem_tra.php")
     Call<List<BaiKiemTraResponse>> getDanhSachBaiKiemTra(
             @Query("id_nguoi_dung") int idNguoiDung
+    );
+    @GET("ds_cau_hoi.php")
+    Call<List<CauHoiResponse>> getDanhSachCauHoi(
+            @Query("id_nguoi_dung") int idNguoiDung,
+            @Query("id_bai_kiem_tra") int idBaiKiemTra
     );
 }

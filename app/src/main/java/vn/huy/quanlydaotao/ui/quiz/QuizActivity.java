@@ -3,26 +3,189 @@ package vn.huy.quanlydaotao.ui.quiz;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import vn.huy.quanlydaotao.R;
+import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
+import vn.huy.quanlydaotao.data.local.TokenManager;
+import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
+import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
+import vn.huy.quanlydaotao.data.repository.CauHoiRepositoryImpl;
+import vn.huy.quanlydaotao.domain.model.CauHoi;
+import vn.huy.quanlydaotao.domain.usecase.LayCauHoiUseCase;
 
 public class QuizActivity extends AppCompatActivity {
+
+    private QuizViewModel viewModel;
+    private TextView tvQuestionText, tvTimer;
+    private RadioGroup rgAnswers;
+    private RadioButton rbA, rbB, rbC, rbD;
+    private int idBkt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        ImageButton btnBack = findViewById(R.id.btnBackQuiz);
-        if (btnBack != null) {
-            btnBack.setOnClickListener(v -> finish());
+        idBkt = getIntent().getIntExtra("ID_BAI_KIEM_TRA", 0);
+        int timeLimit = getIntent().getIntExtra("THOI_GIAN", 60);
+
+        initViews();
+        setupViewModel();
+        observeViewModel();
+
+        viewModel.startTimer(timeLimit);
+    }
+
+    private void initViews() {
+        tvQuestionText = findViewById(R.id.tvQuestionText);
+        tvTimer = findViewById(R.id.tvQuizTimer);
+        rgAnswers = findViewById(R.id.rgAnswers);
+        rbA = findViewById(R.id.rbOption1);
+        rbB = findViewById(R.id.rbOption2);
+        rbC = findViewById(R.id.rbOption3);
+        rbD = findViewById(R.id.rbOption4);
+
+        findViewById(R.id.btnBackQuiz).setOnClickListener(v -> finish());
+        findViewById(R.id.btnNextQuestion).setOnClickListener(v -> viewModel.nextQuestion());
+        findViewById(R.id.btnPrevQuestion).setOnClickListener(v -> viewModel.prevQuestion());
+        findViewById(R.id.btnQuestionList).setOnClickListener(v -> showQuestionListDialog());
+    }
+
+    private void setupViewModel() {
+        DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
+        CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(this);
+        CauHoiRepositoryImpl repo = new CauHoiRepositoryImpl(db.cauHoiDao(), api);
+        LayCauHoiUseCase useCase = new LayCauHoiUseCase(repo);
+
+        viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            @SuppressWarnings("unchecked")
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                return (T) new QuizViewModel(useCase, db.baiLamTamDao());
+            }
+        }).get(QuizViewModel.class);
+    }
+
+    private void observeViewModel() {
+        TokenManager tm = new TokenManager(this);
+        viewModel.loadQuestions(tm.layId(), idBkt);
+        viewModel.loadSavedAnswers();
+
+        viewModel.getQuestions(idBkt).observe(this, questions -> {
+            if (questions != null && !questions.isEmpty()) {
+                viewModel.setQuestionList(questions);
+                updateUI(questions.get(viewModel.getCurrentIndex().getValue()));
+            }
+        });
+
+        viewModel.getCurrentIndex().observe(this, index -> {
+            List<CauHoi> questions = viewModel.getQuestionList();
+            if (questions != null && index < questions.size()) {
+                updateUI(questions.get(index));
+            }
+        });
+
+        viewModel.getRemainingTime().observe(this, time -> tvTimer.setText(time));
+    }
+
+    private void setupRadioGroupListener() {
+        rgAnswers.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == -1) return;
+
+            int currentIdx = viewModel.getCurrentIndex().getValue();
+            List<CauHoi> questions = viewModel.getQuestionList();
+
+            if (questions != null && currentIdx < questions.size()) {
+                int idCauHoi = questions.get(currentIdx).getId();
+                String answer = "";
+                if (checkedId == R.id.rbOption1) answer = "a";
+                else if (checkedId == R.id.rbOption2) answer = "b";
+                else if (checkedId == R.id.rbOption3) answer = "c";
+                else if (checkedId == R.id.rbOption4) answer = "d";
+
+                viewModel.saveAnswer(idCauHoi, answer);
+            }
+        });
+    }
+
+    private void updateUI(CauHoi cauHoi) {
+        if (cauHoi == null) return;
+
+        // Thiết lập nội dung câu hỏi
+        tvQuestionText.setText(cauHoi.getNoiDung());
+        rbA.setText(cauHoi.getCauA());
+        rbB.setText(cauHoi.getCauB());
+        rbC.setText(cauHoi.getCauC());
+        rbD.setText(cauHoi.getCauD());
+
+        // Bước 1: Ngắt listener để việc clearCheck không vô tình kích hoạt lưu dữ liệu trống
+        rgAnswers.setOnCheckedChangeListener(null);
+
+        // Bước 2: Xóa sạch trạng thái cũ
+        rgAnswers.clearCheck();
+
+        // Bước 3: Kiểm tra xem câu này đã có đáp án lưu trong ViewModel chưa
+        Map<Integer, String> answers = viewModel.getUserAnswers().getValue();
+        if (answers != null && answers.containsKey(cauHoi.getId())) {
+            String savedAnswer = answers.get(cauHoi.getId());
+            switch (savedAnswer) {
+                case "a": rbA.setChecked(true); break;
+                case "b": rbB.setChecked(true); break;
+                case "c": rbC.setChecked(true); break;
+                case "d": rbD.setChecked(true); break;
+            }
         }
 
-        ImageButton btnClose = findViewById(R.id.btnCloseQuiz);
-        if (btnClose != null) {
-            btnClose.setOnClickListener(v -> finish());
+        // Bước 4: Thiết lập lại listener sau khi UI đã hiển thị đúng trạng thái
+        setupRadioGroupListener();
+    }
+
+    private void showQuestionListDialog() {
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog =
+                new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_bottom_sheet_questions, null);
+
+        androidx.recyclerview.widget.RecyclerView rvNumbers = view.findViewById(R.id.rvQuestionNumbers);
+        QuestionNumberAdapter adapter = new QuestionNumberAdapter();
+
+        List<CauHoi> questions = viewModel.getQuestionList();
+        int total = (questions != null) ? questions.size() : 0;
+        int current = viewModel.getCurrentIndex().getValue();
+
+        List<Integer> answeredIndices = new ArrayList<>();
+        Map<Integer, String> answers = viewModel.getUserAnswers().getValue();
+
+        if (questions != null && answers != null) {
+            for (int i = 0; i < questions.size(); i++) {
+                if (answers.containsKey(questions.get(i).getId())) {
+                    answeredIndices.add(i);
+                }
+            }
         }
+
+        rvNumbers.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 5));
+        rvNumbers.setAdapter(adapter);
+        adapter.setData(total, current, answeredIndices);
+
+        adapter.setOnItemClickListener(position -> {
+            viewModel.setCurrentIndex(position);
+            dialog.dismiss();
+        });
+
+        dialog.setContentView(view);
+        dialog.show();
     }
 }

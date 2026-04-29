@@ -40,7 +40,7 @@
                 android:fontFamily="sans-serif-black"
                 android:text="Danh sách lớp học"
                 android:textColor="@color/white"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
 

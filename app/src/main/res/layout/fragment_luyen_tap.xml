@@ -26,9 +26,9 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="12dp"
                 android:fontFamily="sans-serif-black"
-                android:text="Luyện tập"
+                android:text="Kiểm tra"
                 android:textColor="@color/white"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>

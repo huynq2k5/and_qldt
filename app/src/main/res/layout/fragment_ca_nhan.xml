@@ -27,7 +27,7 @@
             android:fontFamily="sans-serif-black"
             android:text="Cá nhân"
             android:textColor="@color/white"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -69,7 +69,7 @@
                     android:layout_marginTop="16dp"
                     android:text="Huy Nguyễn"
                     android:textColor="@color/text_primary"
-                    android:textSize="22sp"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <TextView

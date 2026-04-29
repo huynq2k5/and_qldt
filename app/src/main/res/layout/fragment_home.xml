@@ -47,7 +47,7 @@
                         android:fontFamily="sans-serif-black"
                         android:text="Huy"
                         android:textColor="@color/white"
-                        android:textSize="22sp" />
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <com.google.android.material.imageview.ShapeableImageView
@@ -113,7 +113,7 @@
                         android:fontFamily="sans-serif-black"
                         android:text="An toàn thông tin doanh nghiệp"
                         android:textColor="#FFFFFF"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
 
                     <com.google.android.material.progressindicator.LinearProgressIndicator
                         android:id="@+id/courseProgress"

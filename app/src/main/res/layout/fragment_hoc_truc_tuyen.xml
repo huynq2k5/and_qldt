@@ -26,7 +26,7 @@
             android:fontFamily="sans-serif-black"
             android:text="Học trực tuyến"
             android:textColor="@color/white"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
