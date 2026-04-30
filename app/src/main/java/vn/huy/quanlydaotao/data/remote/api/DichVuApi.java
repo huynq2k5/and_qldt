@@ -9,8 +9,11 @@ import retrofit2.http.Query;
 import vn.huy.quanlydaotao.data.remote.dto.BaiKiemTraResponse;
 import vn.huy.quanlydaotao.data.remote.dto.BaiHocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.CauHoiResponse;
+import vn.huy.quanlydaotao.data.remote.dto.ChiTietKetQuaResponse;
 import vn.huy.quanlydaotao.data.remote.dto.DangKyLopRequest;
 import vn.huy.quanlydaotao.data.remote.dto.DangKyLopResponse;
+import vn.huy.quanlydaotao.data.remote.dto.KetQuaRequest;
+import vn.huy.quanlydaotao.data.remote.dto.KetQuaResponse;
 import vn.huy.quanlydaotao.data.remote.dto.KhoaHocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.LichMeetResponse;
 import vn.huy.quanlydaotao.data.remote.dto.LopHocResponse;
@@ -40,4 +43,8 @@ public interface DichVuApi {
             @Query("id_nguoi_dung") int idNguoiDung,
             @Query("id_bai_kiem_tra") int idBaiKiemTra
     );
+    @POST("tra_ket_qua.php")
+    Call<KetQuaResponse> guiBaiLam(@Body KetQuaRequest request);
+    @GET("get_ket_qua.php")
+    Call<ChiTietKetQuaResponse> layChiTietKetQua(@Query("id_ket_qua") int idKetQua);
 }

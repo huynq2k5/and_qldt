@@ -1,5 +1,6 @@
 package vn.huy.quanlydaotao.ui.quiz;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
@@ -24,6 +25,8 @@ import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.CauHoiRepositoryImpl;
 import vn.huy.quanlydaotao.domain.model.CauHoi;
 import vn.huy.quanlydaotao.domain.usecase.LayCauHoiUseCase;
+import vn.huy.quanlydaotao.domain.usecase.NopBaiUseCase;
+import vn.huy.quanlydaotao.ui.ketqua.KetQuaActivity;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -61,20 +64,31 @@ public class QuizActivity extends AppCompatActivity {
         findViewById(R.id.btnNextQuestion).setOnClickListener(v -> viewModel.nextQuestion());
         findViewById(R.id.btnPrevQuestion).setOnClickListener(v -> viewModel.prevQuestion());
         findViewById(R.id.btnQuestionList).setOnClickListener(v -> showQuestionListDialog());
+        findViewById(R.id.btnSubmitQuiz).setOnClickListener(v -> {
+            TokenManager tm = new TokenManager(this);
+            viewModel.submitQuiz(tm.layId(), idBkt);
+        });
     }
 
     private void setupViewModel() {
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(this);
-        CauHoiRepositoryImpl repo = new CauHoiRepositoryImpl(db.cauHoiDao(), api);
-        LayCauHoiUseCase useCase = new LayCauHoiUseCase(repo);
+
+        // Khởi tạo các Repository
+        CauHoiRepositoryImpl repoCauHoi = new CauHoiRepositoryImpl(db.cauHoiDao(), api);
+        // Giả sử Huy đã có KetQuaRepositoryImpl như các turn trước
+        vn.huy.quanlydaotao.data.repository.KetQuaRepositoryImpl repoKetQua =
+                new vn.huy.quanlydaotao.data.repository.KetQuaRepositoryImpl(db.ketQuaDao(), api);
+
+        // Khởi tạo UseCases
+        LayCauHoiUseCase layCauHoiUseCase = new LayCauHoiUseCase(repoCauHoi);
+        NopBaiUseCase nopBaiUseCase = new NopBaiUseCase(repoKetQua);
 
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
-            @SuppressWarnings("unchecked")
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                return (T) new QuizViewModel(useCase, db.baiLamTamDao());
+                return (T) new QuizViewModel(layCauHoiUseCase, db.baiLamTamDao(), nopBaiUseCase);
             }
         }).get(QuizViewModel.class);
     }
@@ -99,6 +113,17 @@ public class QuizActivity extends AppCompatActivity {
         });
 
         viewModel.getRemainingTime().observe(this, time -> tvTimer.setText(time));
+
+        viewModel.getSubmissionResult().observe(this, ketQua -> {
+            if (ketQua != null && "success".equals(ketQua.getStatus())) {
+                Intent intent = new Intent(QuizActivity.this, KetQuaActivity.class);
+                intent.putExtra("ID_KET_QUA", ketQua.getIdKetQua());
+                startActivity(intent);
+                finish();
+            } else {
+                android.widget.Toast.makeText(this, "Nộp bài thất bại!", android.widget.Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void setupRadioGroupListener() {
@@ -148,8 +173,6 @@ public class QuizActivity extends AppCompatActivity {
                 case "d": rbD.setChecked(true); break;
             }
         }
-
-        // Bước 4: Thiết lập lại listener sau khi UI đã hiển thị đúng trạng thái
         setupRadioGroupListener();
     }
 

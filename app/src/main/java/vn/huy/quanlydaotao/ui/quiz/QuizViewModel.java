@@ -14,24 +14,30 @@ import java.util.Map;
 
 import vn.huy.quanlydaotao.data.local.dao.BaiLamTamDao;
 import vn.huy.quanlydaotao.data.local.entity.BaiLamTamEntity;
+import vn.huy.quanlydaotao.data.remote.dto.KetQuaRequest;
 import vn.huy.quanlydaotao.domain.model.CauHoi;
+import vn.huy.quanlydaotao.domain.model.KetQua;
 import vn.huy.quanlydaotao.domain.usecase.LayCauHoiUseCase;
+import vn.huy.quanlydaotao.domain.usecase.NopBaiUseCase;
 
 public class QuizViewModel extends ViewModel {
 
     private final LayCauHoiUseCase layCauHoiUseCase;
     private final BaiLamTamDao baiLamTamDao;
+    private final NopBaiUseCase nopBaiUseCase;
 
     private final MutableLiveData<Integer> currentIndex = new MutableLiveData<>(0);
     private final MutableLiveData<String> remainingTime = new MutableLiveData<>();
     private final MutableLiveData<Map<Integer, String>> userAnswers = new MutableLiveData<>(new HashMap<>());
+    private final MutableLiveData<KetQua> submissionResult = new MutableLiveData<>();
 
     private List<CauHoi> questionList = new ArrayList<>();
     private CountDownTimer timer;
 
-    public QuizViewModel(LayCauHoiUseCase layCauHoiUseCase, BaiLamTamDao baiLamTamDao) {
+    public QuizViewModel(LayCauHoiUseCase layCauHoiUseCase, BaiLamTamDao baiLamTamDao, NopBaiUseCase nopBaiUseCase) {
         this.layCauHoiUseCase = layCauHoiUseCase;
         this.baiLamTamDao = baiLamTamDao;
+        this.nopBaiUseCase = nopBaiUseCase;
     }
 
     public void loadQuestions(int idUser, int idBkt) {
@@ -112,6 +118,34 @@ public class QuizViewModel extends ViewModel {
                 remainingTime.setValue("00 : 00 : 00");
             }
         }.start();
+    }
+
+    public LiveData<KetQua> getSubmissionResult() { return submissionResult; }
+
+    public void submitQuiz(int idUser, int idBkt) {
+        Map<Integer, String> answers = userAnswers.getValue();
+        if (answers == null || answers.isEmpty()) {
+            // Xử lý trường hợp chưa khoanh câu nào (tùy Huy, có thể gửi mảng rỗng)
+            return;
+        }
+
+        // Chuyển đổi từ Map sang List<KetQuaRequest.BaiLam>
+        List<KetQuaRequest.BaiLam> listBaiLam = new ArrayList<>();
+        for (Map.Entry<Integer, String> entry : answers.entrySet()) {
+            listBaiLam.add(new KetQuaRequest.BaiLam(entry.getKey(), entry.getValue()));
+        }
+
+        // Tạo Request DTO
+        KetQuaRequest request = new KetQuaRequest(idUser, idBkt, listBaiLam);
+
+        // Thực thi UseCase và quan sát kết quả
+        nopBaiUseCase.execute(request).observeForever(ketQua -> {
+            if (ketQua != null && "success".equals(ketQua.getStatus())) {
+                // Nộp thành công -> Xóa bảng tạm để lần sau thi bài khác không bị lẫn
+                new Thread(baiLamTamDao::xoaSachBaiLam).start();
+            }
+            submissionResult.postValue(ketQua);
+        });
     }
 
     @Override

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/house"
+        android:icon="@drawable/ic_home_selector"
         android:title="Trang chủ"
         app:cnb_unselectedColor="@color/cnb_unselected_icon"
         app:cnb_iconColor="@color/cnb_selected_icon"
@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/navigation_khoa_hoc"
-        android:icon="@drawable/books"
+        android:icon="@drawable/ic_book_shelf_selecter"
         android:title="Khóa học"
         app:cnb_unselectedColor="@color/cnb_unselected_icon"
         app:cnb_iconColor="@color/cnb_selected_icon"
@@ -19,7 +19,7 @@
 
     <item
         android:id="@+id/navigation_luyen_tap"
-        android:icon="@drawable/pencil_simple_line"
+        android:icon="@drawable/ic_list_selecter"
         android:title="Kiểm tra"
         app:cnb_unselectedColor="@color/cnb_unselected_icon"
         app:cnb_iconColor="@color/cnb_selected_icon"
@@ -27,7 +27,7 @@
 
     <item
         android:id="@+id/navigation_hoc_truc_tuyen"
-        android:icon="@drawable/webcam"
+        android:icon="@drawable/ic_live_selecter"
         android:title="Học Online"
         app:cnb_unselectedColor="@color/cnb_unselected_icon"
         app:cnb_iconColor="@color/cnb_selected_icon"
@@ -35,7 +35,7 @@
 
     <item
         android:id="@+id/navigation_ca_nhan"
-        android:icon="@drawable/user"
+        android:icon="@drawable/ic_user_selecter"
         android:title="Cá nhân"
         app:cnb_unselectedColor="@color/cnb_unselected_icon"
         app:cnb_iconColor="@color/cnb_selected_icon"

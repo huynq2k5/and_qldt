@@ -62,7 +62,8 @@ public class QuestionNumberAdapter extends RecyclerView.Adapter<QuestionNumberAd
         } else {
             holder.cvNumber.setCardBackgroundColor(Color.WHITE);
             holder.tvNumber.setTextColor(Color.parseColor("#757575"));
-            holder.cvNumber.setStrokeWidth(1);
+            holder.cvNumber.setStrokeColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.primary));
+            holder.cvNumber.setStrokeWidth(2);
         }
 
         holder.itemView.setOnClickListener(v -> {
