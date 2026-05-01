@@ -12,6 +12,7 @@ public class TokenManager {
     private static final String KHOA_TOKEN_MOBILE = "token_mobile";
     private static final String KHOA_VAI_TRO = "user_role";
     private static final String KHOA_THOI_GIAN_DANG_NHAP = "login_time";
+    private static final String KHOA_VAN_TAY = "use_biometric";
     private static final long THOI_GIAN_HET_HAN = 10 * 24 * 60 * 60 * 1000L;
 
     private SharedPreferences sharedPreferences;
@@ -31,6 +32,15 @@ public class TokenManager {
         editor.putString(KHOA_TOKEN_MOBILE, tokenMobile);
         editor.putLong(KHOA_THOI_GIAN_DANG_NHAP, System.currentTimeMillis());
         editor.apply();
+    }
+
+    public void thietLapVanTay(boolean enabled) {
+        editor.putBoolean(KHOA_VAN_TAY, enabled);
+        editor.apply();
+    }
+
+    public boolean laVanTayDaBat() {
+        return sharedPreferences.getBoolean(KHOA_VAN_TAY, false);
     }
 
     public int layId() {
@@ -64,7 +74,9 @@ public class TokenManager {
     }
 
     public void xoaToken() {
+        boolean trangThaiVanTay = laVanTayDaBat();
         editor.clear();
+        editor.putBoolean(KHOA_VAN_TAY, trangThaiVanTay);
         editor.apply();
     }
 }

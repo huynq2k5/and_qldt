@@ -1,18 +1,14 @@
 package vn.huy.quanlydaotao.ui.quiz;
 
 import android.os.CountDownTimer;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import vn.huy.quanlydaotao.data.local.TokenManager;
 import vn.huy.quanlydaotao.data.local.dao.BaiLamTamDao;
 import vn.huy.quanlydaotao.data.local.entity.BaiLamTamEntity;
 import vn.huy.quanlydaotao.data.remote.dto.KetQuaRequest;
@@ -20,7 +16,6 @@ import vn.huy.quanlydaotao.domain.model.CauHoi;
 import vn.huy.quanlydaotao.domain.model.KetQua;
 import vn.huy.quanlydaotao.domain.usecase.LayCauHoiUseCase;
 import vn.huy.quanlydaotao.domain.usecase.NopBaiUseCase;
-import vn.huy.quanlydaotao.ui.main.DialogHelper;
 
 public class QuizViewModel extends ViewModel {
 
@@ -36,9 +31,7 @@ public class QuizViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading = new MutableLiveData<>(false);
     private List<CauHoi> questionList = new ArrayList<>();
     private CountDownTimer timer;
-    public LiveData<Boolean> getIsLoading() { return isLoading; }
-    public LiveData<String> getValidationError() { return validationError; }
-    public LiveData<KetQua> getSubmissionResult() { return submissionResult; }
+    private boolean isTimerStarted = false;
 
     public QuizViewModel(LayCauHoiUseCase layCauHoiUseCase, BaiLamTamDao baiLamTamDao, NopBaiUseCase nopBaiUseCase) {
         this.layCauHoiUseCase = layCauHoiUseCase;
@@ -47,24 +40,23 @@ public class QuizViewModel extends ViewModel {
     }
 
     public void loadQuestions(int idUser, int idBkt) {
-        layCauHoiUseCase.refresh(idUser, idBkt);
+        if (questionList.isEmpty()) {
+            layCauHoiUseCase.refresh(idUser, idBkt);
+        }
     }
 
     public LiveData<List<CauHoi>> getQuestions(int idBkt) {
         return layCauHoiUseCase.execute(idBkt);
     }
 
-    public List<CauHoi> getQuestionList() {
-        return questionList;
-    }
-
-    public void setQuestionList(List<CauHoi> list) {
-        this.questionList = list;
-    }
-
+    public List<CauHoi> getQuestionList() { return questionList; }
+    public void setQuestionList(List<CauHoi> list) { this.questionList = list; }
     public LiveData<Integer> getCurrentIndex() { return currentIndex; }
     public LiveData<String> getRemainingTime() { return remainingTime; }
     public LiveData<Map<Integer, String>> getUserAnswers() { return userAnswers; }
+    public LiveData<Boolean> getIsLoading() { return isLoading; }
+    public LiveData<String> getValidationError() { return validationError; }
+    public LiveData<KetQua> getSubmissionResult() { return submissionResult; }
 
     public void nextQuestion() {
         if (currentIndex.getValue() != null && currentIndex.getValue() < questionList.size() - 1) {
@@ -78,21 +70,14 @@ public class QuizViewModel extends ViewModel {
         }
     }
 
-    public void setCurrentIndex(int index) {
-        currentIndex.setValue(index);
-    }
+    public void setCurrentIndex(int index) { currentIndex.setValue(index); }
 
     public void saveAnswer(int questionId, String answer) {
         Map<Integer, String> currentMap = userAnswers.getValue();
         if (currentMap != null) {
-            // 1. Cập nhật vào bản đồ tạm trong RAM trước
             currentMap.put(questionId, answer);
-            userAnswers.setValue(currentMap); // Kích hoạt Observer để UI biết có thay đổi
-
-            // 2. Lưu vào Database ở background để chống mất dữ liệu
-            new Thread(() -> {
-                baiLamTamDao.luuCauTraLoi(new BaiLamTamEntity(questionId, answer));
-            }).start();
+            userAnswers.setValue(currentMap);
+            new Thread(() -> baiLamTamDao.luuCauTraLoi(new BaiLamTamEntity(questionId, answer))).start();
         }
     }
 
@@ -108,7 +93,8 @@ public class QuizViewModel extends ViewModel {
     }
 
     public void startTimer(int minutes) {
-        if (timer != null) timer.cancel();
+        if (isTimerStarted) return;
+        isTimerStarted = true;
 
         timer = new CountDownTimer(minutes * 60 * 1000L, 1000) {
             @Override
@@ -126,29 +112,28 @@ public class QuizViewModel extends ViewModel {
         }.start();
     }
 
+    public void clearTemporaryAnswers() {
+        new Thread(baiLamTamDao::xoaSachBaiLam).start();
+    }
+
     public void submitQuiz(int idUser, int idBkt) {
         Map<Integer, String> answers = userAnswers.getValue();
         if (answers == null || answers.isEmpty()) {
-            validationError.setValue("Chưa có câu trả lời nào được chọn. Vui lòng kiểm tra lại.");
+            validationError.setValue("Chưa có câu trả lời nào được chọn.");
             return;
         }
 
-        // Bật trạng thái loading
         isLoading.setValue(true);
-
         List<KetQuaRequest.BaiLam> listBaiLam = new ArrayList<>();
         for (Map.Entry<Integer, String> entry : answers.entrySet()) {
             listBaiLam.add(new KetQuaRequest.BaiLam(entry.getKey(), entry.getValue()));
         }
 
         KetQuaRequest request = new KetQuaRequest(idUser, idBkt, listBaiLam);
-
         nopBaiUseCase.execute(request).observeForever(ketQua -> {
-            // Tắt trạng thái loading khi có kết quả (thành công hoặc thất bại)
             isLoading.postValue(false);
-
             if (ketQua != null && "success".equals(ketQua.getStatus())) {
-                new Thread(baiLamTamDao::xoaSachBaiLam).start();
+                clearTemporaryAnswers();
             }
             submissionResult.postValue(ketQua);
         });

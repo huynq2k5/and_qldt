@@ -1,10 +1,15 @@
 package vn.huy.quanlydaotao.ui.canhan;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
 import com.google.android.material.button.MaterialButton;
 
 import vn.huy.quanlydaotao.R;
@@ -22,6 +27,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
         initViews();
         setupEvents();
+        View mainView = findViewById(R.id.main);
+        if (mainView != null) {
+            setupEdgeToEdge(mainView);
+        }
     }
 
     private void initViews() {
@@ -51,6 +60,25 @@ public class EditProfileActivity extends AppCompatActivity {
                 Toast.makeText(this, "Đã cập nhật thông tin thành công!", Toast.LENGTH_SHORT).show();
                 finish();
             }
+        });
+    }
+    private void setupEdgeToEdge(View view) {
+        View header = view.findViewById(R.id.layoutHeader);
+        ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+
+            if (header != null) {
+                header.setPadding(
+                        header.getPaddingLeft(),
+                        systemBars.top + 20, // Cộng thêm 20px để khoảng cách thoáng hơn
+                        header.getPaddingRight(),
+                        header.getPaddingBottom()
+                );
+            }
+
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+
+            return WindowInsetsCompat.CONSUMED;
         });
     }
 }

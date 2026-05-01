@@ -45,14 +45,13 @@ public class BaiHocAdapter extends RecyclerView.Adapter<BaiHocAdapter.ViewHolder
 
         if ("video".equals(item.getLoaiNoiDung())) {
             holder.imgType.setImageResource(R.drawable.play_circle);
-            holder.tvLoai.setText("Danh sách video bài giảng"); // Đổi text cho mục tổng hợp
+            holder.tvLoai.setText("Danh sách video bài giảng");
 
             holder.itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    // Lọc lại toàn bộ danh sách để lấy các bài video truyền đi
                     List<BaiHoc> videos = new ArrayList<>();
-                    for(BaiHoc bh : items) {
-                        if("video".equals(bh.getLoaiNoiDung())) videos.add(bh);
+                    for (BaiHoc bh : items) {
+                        if ("video".equals(bh.getLoaiNoiDung())) videos.add(bh);
                     }
                     listener.onVideoGroupClick(videos);
                 }
@@ -63,12 +62,8 @@ public class BaiHocAdapter extends RecyclerView.Adapter<BaiHocAdapter.ViewHolder
 
             holder.itemView.setOnClickListener(v -> {
                 if (listener != null) {
-                    if ("video".equals(item.getLoaiNoiDung())) {
-                        // Chỉ cần gọi thế này, Fragment sẽ tự dùng realVideoList đã lưu
-                        listener.onVideoGroupClick(null);
-                    } else {
-                        listener.onPdfClick(item);
-                    }
+                    // Chỉ cần gọi callback này cho PDF
+                    listener.onPdfClick(item);
                 }
             });
         }

@@ -1,22 +1,19 @@
 package vn.huy.quanlydaotao.ui.quiz;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
 import vn.huy.quanlydaotao.data.local.TokenManager;
@@ -41,10 +38,11 @@ public class QuizActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_quiz);
 
-        androidx.core.view.WindowInsetsControllerCompat windowInsetsController = androidx.core.view.WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
-
+        androidx.core.view.WindowInsetsControllerCompat windowInsetsController =
+                androidx.core.view.WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
         windowInsetsController.setAppearanceLightStatusBars(false);
 
         idBkt = getIntent().getIntExtra("ID_BAI_KIEM_TRA", 0);
@@ -67,42 +65,59 @@ public class QuizActivity extends AppCompatActivity {
         rbD = findViewById(R.id.rbOption4);
         layoutLoading = findViewById(R.id.layoutLoading);
 
-        findViewById(R.id.btnBackQuiz).setOnClickListener(v -> finish());
+        findViewById(R.id.btnBackQuiz).setEnabled(false);
+        findViewById(R.id.btnBackQuiz).setAlpha(0.5f);
+
         findViewById(R.id.btnNextQuestion).setOnClickListener(v -> viewModel.nextQuestion());
         findViewById(R.id.btnPrevQuestion).setOnClickListener(v -> viewModel.prevQuestion());
         findViewById(R.id.btnQuestionList).setOnClickListener(v -> showQuestionListDialog());
+
         findViewById(R.id.btnSubmitQuiz).setOnClickListener(v -> {
             DialogHelper.showConfirmDialog(
-                    this,
-                    "Nộp bài kiểm tra",
-                    "Bạn có chắc chắn muốn kết thúc bài làm và nộp kết quả ngay bây giờ không?",
-                    "Nộp bài",
-                    "Làm tiếp",
+                    this, "Nộp bài", "Bạn có chắc muốn nộp bài?", "Nộp bài", "Làm tiếp",
                     () -> {
                         TokenManager tm = new TokenManager(this);
                         viewModel.submitQuiz(tm.layId(), idBkt);
                     }
             );
         });
+
+        findViewById(R.id.btnCloseQuiz).setOnClickListener(v -> showExitConfirmationDialog());
+    }
+
+    @Override
+    public void onBackPressed() {
+        showExitConfirmationDialog();
+    }
+
+    private void showExitConfirmationDialog() {
+        DialogHelper.showConfirmDialog(
+                this,
+                "Thoát bài thi",
+                "Nếu thoát bây giờ, toàn bộ bài làm tạm thời sẽ bị xóa. Bạn có chắc chắn muốn thoát không?",
+                "Thoát",
+                "Làm tiếp",
+                () -> {
+                    viewModel.clearTemporaryAnswers();
+                    finish();
+                }
+        );
     }
 
     private void setupViewModel() {
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(this);
-
-        // Khởi tạo các Repository
         CauHoiRepositoryImpl repoCauHoi = new CauHoiRepositoryImpl(db.cauHoiDao(), api);
-        // Giả sử Huy đã có KetQuaRepositoryImpl như các turn trước
         vn.huy.quanlydaotao.data.repository.KetQuaRepositoryImpl repoKetQua =
                 new vn.huy.quanlydaotao.data.repository.KetQuaRepositoryImpl(db.ketQuaDao(), api);
 
-        // Khởi tạo UseCases
         LayCauHoiUseCase layCauHoiUseCase = new LayCauHoiUseCase(repoCauHoi);
         NopBaiUseCase nopBaiUseCase = new NopBaiUseCase(repoKetQua);
 
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
+            @SuppressWarnings("unchecked")
             public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
                 return (T) new QuizViewModel(layCauHoiUseCase, db.baiLamTamDao(), nopBaiUseCase);
             }
@@ -138,42 +153,18 @@ public class QuizActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 } else {
-                    DialogHelper.showNotificationDialog(
-                            this,
-                            "Thông báo",
-                            "Nộp bài thất bại: " + ketQua.getStatus(),
-                            "Đóng",
-                            null
-                    );
+                    DialogHelper.showNotificationDialog(this, "Lỗi", "Nộp bài thất bại: " + ketQua.getStatus(), "Đóng", null);
                 }
-            } else {
-                DialogHelper.showNotificationDialog(
-                        this,
-                        "Lỗi kết nối",
-                        "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng mạng.",
-                        "Thử lại",
-                        null
-                );
             }
         });
 
         viewModel.getIsLoading().observe(this, isLoading -> {
-            if (isLoading) {
-                layoutLoading.setVisibility(View.VISIBLE);
-            } else {
-                layoutLoading.setVisibility(View.GONE);
-            }
+            layoutLoading.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
 
         viewModel.getValidationError().observe(this, errorMessage -> {
             if (errorMessage != null) {
-                DialogHelper.showNotificationDialog(
-                        this,
-                        "Thông báo",
-                        errorMessage,
-                        "Làm bài tiếp",
-                        null
-                );
+                DialogHelper.showNotificationDialog(this, "Thông báo", errorMessage, "Làm bài tiếp", null);
             }
         });
     }
@@ -181,18 +172,11 @@ public class QuizActivity extends AppCompatActivity {
     private void setupRadioGroupListener() {
         rgAnswers.setOnCheckedChangeListener((group, checkedId) -> {
             if (checkedId == -1) return;
-
             int currentIdx = viewModel.getCurrentIndex().getValue();
             List<CauHoi> questions = viewModel.getQuestionList();
-
             if (questions != null && currentIdx < questions.size()) {
                 int idCauHoi = questions.get(currentIdx).getId();
-                String answer = "";
-                if (checkedId == R.id.rbOption1) answer = "a";
-                else if (checkedId == R.id.rbOption2) answer = "b";
-                else if (checkedId == R.id.rbOption3) answer = "c";
-                else if (checkedId == R.id.rbOption4) answer = "d";
-
+                String answer = (checkedId == R.id.rbOption1) ? "a" : (checkedId == R.id.rbOption2) ? "b" : (checkedId == R.id.rbOption3) ? "c" : "d";
                 viewModel.saveAnswer(idCauHoi, answer);
             }
         });
@@ -200,23 +184,14 @@ public class QuizActivity extends AppCompatActivity {
 
     private void updateUI(CauHoi cauHoi) {
         if (cauHoi == null) return;
-
         int currentPos = viewModel.getCurrentIndex().getValue() != null ? viewModel.getCurrentIndex().getValue() : 0;
-        String displayContent = "Câu " + (currentPos + 1) + ": " + cauHoi.getNoiDung();
-        tvQuestionText.setText(displayContent);
-
+        tvQuestionText.setText("Câu " + (currentPos + 1) + ": " + cauHoi.getNoiDung());
         rbA.setText(cauHoi.getCauA());
         rbB.setText(cauHoi.getCauB());
         rbC.setText(cauHoi.getCauC());
         rbD.setText(cauHoi.getCauD());
-
-        // Bước 1: Ngắt listener để việc clearCheck không vô tình kích hoạt lưu dữ liệu trống
         rgAnswers.setOnCheckedChangeListener(null);
-
-        // Bước 2: Xóa sạch trạng thái cũ
         rgAnswers.clearCheck();
-
-        // Bước 3: Kiểm tra xem câu này đã có đáp án lưu trong ViewModel chưa
         Map<Integer, String> answers = viewModel.getUserAnswers().getValue();
         if (answers != null && answers.containsKey(cauHoi.getId())) {
             String savedAnswer = answers.get(cauHoi.getId());
@@ -231,37 +206,18 @@ public class QuizActivity extends AppCompatActivity {
     }
 
     private void showQuestionListDialog() {
-        com.google.android.material.bottomsheet.BottomSheetDialog dialog =
-                new com.google.android.material.bottomsheet.BottomSheetDialog(this);
+        com.google.android.material.bottomsheet.BottomSheetDialog dialog = new com.google.android.material.bottomsheet.BottomSheetDialog(this);
         View view = getLayoutInflater().inflate(R.layout.layout_bottom_sheet_questions, null);
-
         androidx.recyclerview.widget.RecyclerView rvNumbers = view.findViewById(R.id.rvQuestionNumbers);
         QuestionNumberAdapter adapter = new QuestionNumberAdapter();
-
         List<CauHoi> questions = viewModel.getQuestionList();
-        int total = (questions != null) ? questions.size() : 0;
-        int current = viewModel.getCurrentIndex().getValue();
-
-        List<Integer> answeredIndices = new ArrayList<>();
-        Map<Integer, String> answers = viewModel.getUserAnswers().getValue();
-
-        if (questions != null && answers != null) {
-            for (int i = 0; i < questions.size(); i++) {
-                if (answers.containsKey(questions.get(i).getId())) {
-                    answeredIndices.add(i);
-                }
-            }
-        }
-
         rvNumbers.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 5));
         rvNumbers.setAdapter(adapter);
-        adapter.setData(total, current, answeredIndices);
-
+        adapter.setData(questions.size(), viewModel.getCurrentIndex().getValue(), new ArrayList<>(viewModel.getUserAnswers().getValue().keySet()));
         adapter.setOnItemClickListener(position -> {
             viewModel.setCurrentIndex(position);
             dialog.dismiss();
         });
-
         dialog.setContentView(view);
         dialog.show();
     }
