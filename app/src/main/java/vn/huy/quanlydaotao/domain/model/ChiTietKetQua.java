@@ -21,10 +21,19 @@ public class ChiTietKetQua {
     public List<CauHoiChiTiet> getDanhSachChiTiet() { return danhSachChiTiet; }
 
     public static class CauHoiChiTiet {
+        @com.google.gson.annotations.SerializedName("id_cau_hoi")
         private int idCauHoi;
+
+        @com.google.gson.annotations.SerializedName("cau_tra_loi")
         private String cauTraLoi;
+
+        @com.google.gson.annotations.SerializedName("la_dap_an")
         private int laDapAn;
+
+        @com.google.gson.annotations.SerializedName("noi_dung")
         private String noiDung;
+
+        @com.google.gson.annotations.SerializedName("dap_an_dung")
         private String dapAnDung;
 
         public CauHoiChiTiet(int idCauHoi, String cauTraLoi, int laDapAn, String noiDung, String dapAnDung) {

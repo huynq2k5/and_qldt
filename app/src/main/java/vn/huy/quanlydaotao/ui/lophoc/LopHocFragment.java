@@ -63,7 +63,12 @@ public class LopHocFragment extends Fragment {
     private void initViews(View view) {
         shimmerLopHoc = view.findViewById(R.id.shimmerLopHoc);
         rvLopHoc = view.findViewById(R.id.rvLopHoc);
-        view.findViewById(R.id.btnBack).setOnClickListener(v -> requireActivity().onBackPressed());
+
+        if (shimmerLopHoc != null) {
+            shimmerLopHoc.startShimmer();
+        }
+
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> requireActivity().getOnBackPressedDispatcher().onBackPressed());
     }
 
     private void setupEdgeToEdge(View view) {
@@ -107,6 +112,7 @@ public class LopHocFragment extends Fragment {
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
             @Override
+            @SuppressWarnings("unchecked")
             public <T extends androidx.lifecycle.ViewModel> T create(@NonNull Class<T> modelClass) {
                 return (T) new LopHocViewModel(useCase);
             }
@@ -115,25 +121,14 @@ public class LopHocFragment extends Fragment {
 
     private void observeData() {
         viewModel.layDanhSachLopHoc(idKhoaHoc, idNguoiDung).observe(getViewLifecycleOwner(), lops -> {
-            if (lops != null) {
+            if (lops != null && !lops.isEmpty()) {
                 adapter.setItems(lops);
-                viewModel.setFinishedLoading();
-            }
-        });
 
-        viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
-            if (loading != null && !loading) {
-                new Handler().postDelayed(() -> {
-                    if (shimmerLopHoc != null) {
-                        shimmerLopHoc.stopShimmer();
-                        shimmerLopHoc.setVisibility(View.GONE);
-                    }
-                    rvLopHoc.setVisibility(View.VISIBLE);
-                }, 600);
-            } else {
-                rvLopHoc.setVisibility(View.GONE);
-                shimmerLopHoc.setVisibility(View.VISIBLE);
-                shimmerLopHoc.startShimmer();
+                if (shimmerLopHoc != null) {
+                    shimmerLopHoc.stopShimmer();
+                    shimmerLopHoc.setVisibility(View.GONE);
+                }
+                rvLopHoc.setVisibility(View.VISIBLE);
             }
         });
     }

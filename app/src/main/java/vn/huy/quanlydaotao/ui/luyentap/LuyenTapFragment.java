@@ -125,7 +125,7 @@ public class LuyenTapFragment extends Fragment {
     private void showConfirmDialog(BaiKiemTra item) {
         DialogHelper.showConfirmDialog(
                 requireContext(),
-                "Bắt đầu luyện tập",
+                "Bắt đầu kiểm tra",
                 "Bạn có muốn bắt đầu bài: " + item.getTieuDe() + "?\nThời gian: " + item.getThoiGianLam() + " phút.",
                 "Bắt đầu",
                 "Hủy",

@@ -3,9 +3,13 @@ package vn.huy.quanlydaotao.ui.ketqua;
 import android.animation.Animator;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
@@ -36,6 +40,16 @@ public class KetQuaActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ket_qua);
+        View mainView = findViewById(android.R.id.content);
+        androidx.core.view.ViewCompat.setOnApplyWindowInsetsListener(mainView, (v, insets) -> {
+            androidx.core.graphics.Insets systemBars = insets.getInsets(androidx.core.view.WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        androidx.core.view.WindowInsetsControllerCompat windowInsetsController = androidx.core.view.WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+
+        windowInsetsController.setAppearanceLightStatusBars(false);
 
         idKetQua = getIntent().getIntExtra("ID_KET_QUA", 0);
 
@@ -64,6 +78,12 @@ public class KetQuaActivity extends AppCompatActivity {
             public void onAnimationCancel(Animator animation) {}
             @Override
             public void onAnimationRepeat(Animator animation) {}
+        });
+
+        findViewById(R.id.btnViewDetail).setOnClickListener(v -> {
+            android.content.Intent intent = new android.content.Intent(KetQuaActivity.this, ChiTietKetQuaActivity.class);
+            intent.putExtra("ID_KET_QUA", idKetQua);
+            startActivity(intent);
         });
     }
 

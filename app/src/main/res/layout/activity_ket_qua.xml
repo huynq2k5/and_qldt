@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:background="?android:attr/colorBackground">
 
+    <!-- Header Background -->
     <View
         android:id="@+id/viewHeaderBackground"
         android:layout_width="0dp"
@@ -14,6 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Lottie Animation -->
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/lottieResult"
         android:layout_width="160dp"
@@ -25,14 +27,15 @@
         app:lottie_autoPlay="true"
         app:lottie_loop="false" />
 
+    <!-- Card Thông tin điểm -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cvResultInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="32dp"
-        android:layout_marginTop="-40dp"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="8dp"
+        android:layout_marginTop="-50dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="12dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/viewHeaderBackground">
@@ -42,7 +45,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="vertical"
-            android:padding="30dp">
+            android:padding="24dp">
 
             <TextView
                 android:id="@+id/tvFinalScore"
@@ -51,33 +54,46 @@
                 android:fontFamily="sans-serif-black"
                 android:text="0.0"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="56sp" />
+                android:textSize="64sp" />
 
             <TextView
                 android:id="@+id/tvStatusLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.1"
-                android:text="TRẠNG THÁI"
+                android:fontFamily="sans-serif-black"
+                android:letterSpacing="0.05"
+                android:text="ĐANG TẢI..."
                 android:textAllCaps="true"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvTimeNop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="12dp"
                 android:fontFamily="sans-serif-medium"
-                android:letterSpacing="0.1"
-                android:text="00:00"
-                android:textAllCaps="true"
-                android:textSize="8sp" />
+                android:text="Thời gian nộp: --:--"
+                android:textColor="?android:attr/textColorSecondary"
+                android:textSize="13sp" />
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
+    <!-- Nút Xem chi tiết (Đặt ngoài Card) -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnViewDetail"
+        style="@style/Widget.Material3.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
+        android:text="XEM CHI TIẾT BÀI LÀM"
+        android:textColor="@color/primary"
+        android:fontFamily="sans-serif-black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cvResultInfo" />
+
+    <!-- Nút Hoàn tất -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnFinishResult"
         android:layout_width="0dp"
@@ -86,11 +102,13 @@
         android:layout_marginBottom="32dp"
         android:fontFamily="sans-serif-black"
         android:text="HOÀN TẤT"
-        app:cornerRadius="12dp"
+        android:textSize="16sp"
+        app:cornerRadius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Konfetti -->
     <nl.dionsegijn.konfetti.xml.KonfettiView
         android:id="@+id/konfettiView"
         android:layout_width="match_parent"

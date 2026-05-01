@@ -17,7 +17,6 @@
         <!-- System Navigation Bar Dark Mode -->
         <item name="android:navigationBarColor">@color/card_background</item>
         <item name="android:windowLightNavigationBar" tools:targetApi="o_mr1">false</item>
-
         <item name="android:fontFamily">@font/poppins</item>
     </style>
 </resources>

@@ -38,6 +38,9 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(Color.TRANSPARENT);
         getWindow().setNavigationBarColor(Color.TRANSPARENT);
         setContentView(R.layout.activity_main);
+        androidx.core.view.WindowInsetsControllerCompat windowInsetsController = androidx.core.view.WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+
+        windowInsetsController.setAppearanceLightStatusBars(false);
 
         // Xử lý Window Insets cho ID "main"
         // Sửa đoạn xử lý Window Insets trong onCreate của MainActivity

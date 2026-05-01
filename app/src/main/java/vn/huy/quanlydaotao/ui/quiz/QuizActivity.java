@@ -27,6 +27,7 @@ import vn.huy.quanlydaotao.domain.model.CauHoi;
 import vn.huy.quanlydaotao.domain.usecase.LayCauHoiUseCase;
 import vn.huy.quanlydaotao.domain.usecase.NopBaiUseCase;
 import vn.huy.quanlydaotao.ui.ketqua.KetQuaActivity;
+import vn.huy.quanlydaotao.ui.main.DialogHelper;
 
 public class QuizActivity extends AppCompatActivity {
 
@@ -35,11 +36,16 @@ public class QuizActivity extends AppCompatActivity {
     private RadioGroup rgAnswers;
     private RadioButton rbA, rbB, rbC, rbD;
     private int idBkt;
+    private View layoutLoading;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        androidx.core.view.WindowInsetsControllerCompat windowInsetsController = androidx.core.view.WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
+
+        windowInsetsController.setAppearanceLightStatusBars(false);
 
         idBkt = getIntent().getIntExtra("ID_BAI_KIEM_TRA", 0);
         int timeLimit = getIntent().getIntExtra("THOI_GIAN", 60);
@@ -59,14 +65,24 @@ public class QuizActivity extends AppCompatActivity {
         rbB = findViewById(R.id.rbOption2);
         rbC = findViewById(R.id.rbOption3);
         rbD = findViewById(R.id.rbOption4);
+        layoutLoading = findViewById(R.id.layoutLoading);
 
         findViewById(R.id.btnBackQuiz).setOnClickListener(v -> finish());
         findViewById(R.id.btnNextQuestion).setOnClickListener(v -> viewModel.nextQuestion());
         findViewById(R.id.btnPrevQuestion).setOnClickListener(v -> viewModel.prevQuestion());
         findViewById(R.id.btnQuestionList).setOnClickListener(v -> showQuestionListDialog());
         findViewById(R.id.btnSubmitQuiz).setOnClickListener(v -> {
-            TokenManager tm = new TokenManager(this);
-            viewModel.submitQuiz(tm.layId(), idBkt);
+            DialogHelper.showConfirmDialog(
+                    this,
+                    "Nộp bài kiểm tra",
+                    "Bạn có chắc chắn muốn kết thúc bài làm và nộp kết quả ngay bây giờ không?",
+                    "Nộp bài",
+                    "Làm tiếp",
+                    () -> {
+                        TokenManager tm = new TokenManager(this);
+                        viewModel.submitQuiz(tm.layId(), idBkt);
+                    }
+            );
         });
     }
 
@@ -115,13 +131,49 @@ public class QuizActivity extends AppCompatActivity {
         viewModel.getRemainingTime().observe(this, time -> tvTimer.setText(time));
 
         viewModel.getSubmissionResult().observe(this, ketQua -> {
-            if (ketQua != null && "success".equals(ketQua.getStatus())) {
-                Intent intent = new Intent(QuizActivity.this, KetQuaActivity.class);
-                intent.putExtra("ID_KET_QUA", ketQua.getIdKetQua());
-                startActivity(intent);
-                finish();
+            if (ketQua != null) {
+                if ("success".equals(ketQua.getStatus())) {
+                    Intent intent = new Intent(QuizActivity.this, KetQuaActivity.class);
+                    intent.putExtra("ID_KET_QUA", ketQua.getIdKetQua());
+                    startActivity(intent);
+                    finish();
+                } else {
+                    DialogHelper.showNotificationDialog(
+                            this,
+                            "Thông báo",
+                            "Nộp bài thất bại: " + ketQua.getStatus(),
+                            "Đóng",
+                            null
+                    );
+                }
             } else {
-                android.widget.Toast.makeText(this, "Nộp bài thất bại!", android.widget.Toast.LENGTH_SHORT).show();
+                DialogHelper.showNotificationDialog(
+                        this,
+                        "Lỗi kết nối",
+                        "Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại mạng mạng.",
+                        "Thử lại",
+                        null
+                );
+            }
+        });
+
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            if (isLoading) {
+                layoutLoading.setVisibility(View.VISIBLE);
+            } else {
+                layoutLoading.setVisibility(View.GONE);
+            }
+        });
+
+        viewModel.getValidationError().observe(this, errorMessage -> {
+            if (errorMessage != null) {
+                DialogHelper.showNotificationDialog(
+                        this,
+                        "Thông báo",
+                        errorMessage,
+                        "Làm bài tiếp",
+                        null
+                );
             }
         });
     }
@@ -149,8 +201,10 @@ public class QuizActivity extends AppCompatActivity {
     private void updateUI(CauHoi cauHoi) {
         if (cauHoi == null) return;
 
-        // Thiết lập nội dung câu hỏi
-        tvQuestionText.setText(cauHoi.getNoiDung());
+        int currentPos = viewModel.getCurrentIndex().getValue() != null ? viewModel.getCurrentIndex().getValue() : 0;
+        String displayContent = "Câu " + (currentPos + 1) + ": " + cauHoi.getNoiDung();
+        tvQuestionText.setText(displayContent);
+
         rbA.setText(cauHoi.getCauA());
         rbB.setText(cauHoi.getCauB());
         rbC.setText(cauHoi.getCauC());

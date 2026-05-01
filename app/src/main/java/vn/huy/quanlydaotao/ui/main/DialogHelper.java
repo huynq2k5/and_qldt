@@ -55,4 +55,38 @@ public class DialogHelper {
 
         dialog.show();
     }
+    public static void showNotificationDialog(
+            Context context,
+            String title,
+            String message,
+            String buttonText,
+            DialogCallback callback) {
+
+        View view = LayoutInflater.from(context).inflate(R.layout.layout_dialog_info, null);
+
+        AlertDialog dialog = new AlertDialog.Builder(context)
+                .setView(view)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
+        TextView tvTitle = view.findViewById(R.id.tvDialogTitle);
+        TextView tvMessage = view.findViewById(R.id.tvDialogMessage);
+        AppCompatButton btnPos = view.findViewById(R.id.btnPositive);
+
+        tvTitle.setText(title);
+        tvMessage.setText(message);
+        btnPos.setText(buttonText);
+
+        btnPos.setOnClickListener(v -> {
+            dialog.dismiss();
+            if (callback != null) {
+                callback.onConfirmed();
+            }
+        });
+
+        dialog.show();
+    }
 }
