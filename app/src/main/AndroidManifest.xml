@@ -14,6 +14,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Quanlydaotao">
         <activity
+            android:name=".ui.canhan.EditProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.ketqua.ChiTietKetQuaActivity"
             android:exported="false" />
         <activity

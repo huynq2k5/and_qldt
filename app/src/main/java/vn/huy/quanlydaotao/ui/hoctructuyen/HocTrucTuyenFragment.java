@@ -1,6 +1,7 @@
 package vn.huy.quanlydaotao.ui.hoctructuyen;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,6 +19,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.snackbar.Snackbar;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -31,6 +35,7 @@ import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.LichMeetRepositoryImpl;
 import vn.huy.quanlydaotao.domain.model.LichMeet;
 import vn.huy.quanlydaotao.domain.usecase.LayLichMeetUseCase;
+import vn.huy.quanlydaotao.ui.main.MainViewModel;
 
 public class HocTrucTuyenFragment extends Fragment {
 
@@ -38,6 +43,7 @@ public class HocTrucTuyenFragment extends Fragment {
     private HocTrucTuyenViewModel viewModel;
     private TokenManager tokenManager;
     private int idNguoiDung;
+    private MainViewModel mainViewModel;
 
     public HocTrucTuyenFragment() {}
 
@@ -90,16 +96,11 @@ public class HocTrucTuyenFragment extends Fragment {
         rvLichMeet.setLayoutManager(new LinearLayoutManager(getContext()));
         rvLichMeet.setAdapter(adapter);
 
-        adapter.setOnBtnJoinClickListener(link -> {
-            if (link != null && !link.isEmpty()) {
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
-            } else {
-                Toast.makeText(getContext(), "Link không khả dụng", Toast.LENGTH_SHORT).show();
-            }
-        });
+        adapter.setOnBtnJoinClickListener(this::handleJoinMeeting);
     }
 
     private void setupViewModel() {
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(requireContext());
         LichMeetRepositoryImpl repo = new LichMeetRepositoryImpl(db.lichMeetDao(), api);
@@ -173,7 +174,40 @@ public class HocTrucTuyenFragment extends Fragment {
         TextView tvTitle = getView().findViewById(R.id.tvLiveTitle);
         View btnJoin = getView().findViewById(R.id.btnJoinLive);
 
-        tvTitle.setText(item.getTieuDe());
-        btnJoin.setOnClickListener(v -> startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(item.getLinkMeet()))));
+        if (tvTitle != null) tvTitle.setText(item.getTieuDe());
+
+        if (btnJoin != null) {
+            btnJoin.setOnClickListener(v -> handleJoinMeeting(item.getLinkMeet()));
+        }
+    }
+
+    private void handleJoinMeeting(String link) {
+        Boolean isConnected = mainViewModel.getIsConnected().getValue();
+        View rootView = getView();
+        if (rootView == null) return;
+
+        if (isConnected != null && !isConnected) {
+            showStatusSnackbar(rootView, "Không có mạng, không thể vào học lúc này!", "#F59E0B", Color.BLACK);
+            return;
+        }
+
+        if (link == null || link.isEmpty()) {
+            showStatusSnackbar(rootView, "Lỗi: Link lớp học không tồn tại!", "#B3261E", Color.WHITE);
+            return;
+        }
+
+        try {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+        } catch (Exception e) {
+            showStatusSnackbar(rootView, "Thiết bị không có ứng dụng mở link này!", "#B3261E", Color.WHITE);
+        }
+    }
+
+    private void showStatusSnackbar(View view, String message, String colorHex, int textColor) {
+        Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
+        snackbar.setBackgroundTint(Color.parseColor(colorHex));
+        snackbar.setTextColor(textColor);
+        snackbar.setAnchorView(getView().findViewById(R.id.bottom_menu));
+        snackbar.show();
     }
 }

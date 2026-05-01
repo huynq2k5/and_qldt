@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import vn.huy.quanlydaotao.ui.main.DialogHelper;
 public class CaNhanFragment extends Fragment {
 
     private TokenManager tokenManager;
+    private LinearLayout btnEditProfile;
 
     public CaNhanFragment() {
     }
@@ -63,6 +65,8 @@ public class CaNhanFragment extends Fragment {
         TextView tvProfileName = view.findViewById(R.id.tvProfileName);
         TextView tvProfileEmail = view.findViewById(R.id.tvProfileEmail);
         View btnLogout = view.findViewById(R.id.btnLogout);
+        btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        btnEditProfile.setOnClickListener(v -> { startActivity(new Intent(getContext(), EditProfileActivity.class)); });
 
         if (tvProfileName != null) tvProfileName.setText(tokenManager.layHoTen());
         if (tvProfileEmail != null) tvProfileEmail.setText(tokenManager.layEmail());

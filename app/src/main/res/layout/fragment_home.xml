@@ -18,18 +18,33 @@
             android:layout_height="wrap_content"
             android:background="@drawable/bg_header_rounded"
             android:orientation="vertical"
-            android:paddingHorizontal="24dp"
+            android:paddingHorizontal="8dp"
             android:paddingBottom="16dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingVertical="16dp">
+                android:paddingVertical="8dp">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/imgUser"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:padding="2dp"
+                    android:src="@drawable/ic_user_placeholder"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+                    app:strokeColor="#40FFFFFF"
+                    app:strokeWidth="2dp" />
 
                 <LinearLayout
+                    android:id="@+id/layoutInfo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/imgUser"
                     android:orientation="vertical">
 
                     <TextView
@@ -38,29 +53,48 @@
                         android:layout_height="wrap_content"
                         android:text="Xin chào,"
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/tvUsername"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="sans-serif-black"
-                        android:text="Huy"
+                        android:text="Nguyễn Quang Huy"
                         android:textColor="@color/white"
-                        android:textSize="18sp" />
+                        android:textSize="17sp" />
                 </LinearLayout>
 
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/imgUser"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
-                    android:padding="2dp"
-                    android:src="@drawable/ic_user_placeholder"
-                    app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
-                    app:strokeColor="#40FFFFFF"
-                    app:strokeWidth="2dp" />
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:id="@+id/btnSearch"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="10dp"
+                        android:src="@drawable/search_line"
+                        app:tint="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/btnNotification"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
+                        android:layout_marginStart="4dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="10dp"
+                        android:src="@drawable/bell"
+                        app:tint="@color/white" />
+                </LinearLayout>
             </RelativeLayout>
         </LinearLayout>
     </com.google.android.material.appbar.AppBarLayout>
@@ -80,9 +114,9 @@
                 android:id="@+id/cvContinueLearning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
+                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="8dp"
-                app:cardCornerRadius="28dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 

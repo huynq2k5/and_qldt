@@ -18,6 +18,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.snackbar.Snackbar;
+
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
 import vn.huy.quanlydaotao.data.local.TokenManager;
@@ -27,6 +29,7 @@ import vn.huy.quanlydaotao.data.repository.BaiKiemTraRepositoryImpl;
 import vn.huy.quanlydaotao.domain.model.BaiKiemTra;
 import vn.huy.quanlydaotao.domain.usecase.LayBaiKiemTraUseCase;
 import vn.huy.quanlydaotao.ui.main.DialogHelper;
+import vn.huy.quanlydaotao.ui.main.MainViewModel;
 import vn.huy.quanlydaotao.ui.quiz.QuizActivity;
 
 public class LuyenTapFragment extends Fragment {
@@ -35,6 +38,7 @@ public class LuyenTapFragment extends Fragment {
     private PracticeAdapter adapter;
     private LuyenTapViewModel viewModel;
     private TokenManager tokenManager;
+    private MainViewModel mainViewModel;
 
     public LuyenTapFragment() {}
 
@@ -77,7 +81,7 @@ public class LuyenTapFragment extends Fragment {
     }
 
     private void setupViewModel() {
-        // Khởi tạo các thành phần theo Clean Architecture
+        mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(requireContext());
         BaiKiemTraRepositoryImpl repo = new BaiKiemTraRepositoryImpl(db.baiKiemTraDao(), api);
@@ -123,6 +127,24 @@ public class LuyenTapFragment extends Fragment {
     }
 
     private void showConfirmDialog(BaiKiemTra item) {
+        Boolean isConnected = mainViewModel.getIsConnected().getValue();
+
+        if (isConnected != null && !isConnected) {
+            View rootView = getView();
+            if (rootView != null) {
+                Snackbar snackbar = Snackbar.make(rootView,
+                        "Không có mạng, không thể vào thi lúc này!",
+                        Snackbar.LENGTH_LONG);
+
+                snackbar.setBackgroundTint(android.graphics.Color.parseColor("#F59E0B"));
+                snackbar.setTextColor(android.graphics.Color.BLACK);
+                snackbar.setActionTextColor(android.graphics.Color.BLACK);
+
+                snackbar.show();
+            }
+            return;
+        }
+
         DialogHelper.showConfirmDialog(
                 requireContext(),
                 "Bắt đầu kiểm tra",
@@ -131,7 +153,6 @@ public class LuyenTapFragment extends Fragment {
                 "Hủy",
                 () -> {
                     Intent intent = new Intent(getActivity(), QuizActivity.class);
-                    // Truyền ID bài kiểm tra để màn hình Quiz lấy danh sách câu hỏi tương ứng
                     intent.putExtra("ID_BAI_KIEM_TRA", item.getId());
                     intent.putExtra("QUIZ_TITLE", item.getTieuDe());
                     intent.putExtra("THOI_GIAN", item.getThoiGianLam());

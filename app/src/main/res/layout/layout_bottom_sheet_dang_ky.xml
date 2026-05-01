@@ -48,6 +48,6 @@
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:backgroundTint="@color/primary"
-        app:cornerRadius="16dp" />
+        app:cornerRadius="8dp" />
 
 </LinearLayout>
