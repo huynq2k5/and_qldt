@@ -12,21 +12,23 @@ public class BaiKiemTraEntity {
     private int diemDat;
     private int thoiGianLam;
     private String tenKhoaHoc;
+    private Integer idKetQua;
 
-    public BaiKiemTraEntity(int id, int idKhoaHoc, String tieuDe, int diemDat, int thoiGianLam, String tenKhoaHoc) {
+    public BaiKiemTraEntity(int id, int idKhoaHoc, String tieuDe, int diemDat, int thoiGianLam, String tenKhoaHoc, Integer idKetQua) {
         this.id = id;
         this.idKhoaHoc = idKhoaHoc;
         this.tieuDe = tieuDe;
         this.diemDat = diemDat;
         this.thoiGianLam = thoiGianLam;
         this.tenKhoaHoc = tenKhoaHoc;
+        this.idKetQua = idKetQua;
     }
 
-    // Getters
     public int getId() { return id; }
     public int getIdKhoaHoc() { return idKhoaHoc; }
     public String getTieuDe() { return tieuDe; }
     public int getDiemDat() { return diemDat; }
     public int getThoiGianLam() { return thoiGianLam; }
     public String getTenKhoaHoc() { return tenKhoaHoc; }
+    public Integer getIdKetQua() { return idKetQua; }
 }

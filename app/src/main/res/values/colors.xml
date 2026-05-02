@@ -16,7 +16,7 @@
     <color name="primary_dark">#1E3A8A</color>
     <color name="background_grey">#F8FAFC</color>
     <color name="surface">#FFFFFF</color>
-    <color name="surface_variant">#F1F5F9</color>
+    <color name="surface_variant">#EEF0F4</color>
     <color name="text_primary">#1E293B</color>
     <color name="text_secondary">#64748B</color>
     <color name="card_stroke">#E2E8F0</color>

@@ -15,12 +15,14 @@ public class BaiKiemTraResponse {
     private int thoiGianLam;
     @SerializedName("ten_khoa_hoc")
     private String tenKhoaHoc;
+    @SerializedName("id_ket_qua")
+    private Integer idKetQua;
 
-    // Getters
     public int getId() { return id; }
     public int getIdKhoaHoc() { return idKhoaHoc; }
     public String getTieuDe() { return tieuDe; }
     public int getDiemDat() { return diemDat; }
     public int getThoiGianLam() { return thoiGianLam; }
     public String getTenKhoaHoc() { return tenKhoaHoc; }
+    public Integer getIdKetQua() { return idKetQua; }
 }

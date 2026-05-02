@@ -77,7 +77,20 @@ public class LuyenTapFragment extends Fragment {
         rvPracticeQuizzes.setLayoutManager(new LinearLayoutManager(getContext()));
         rvPracticeQuizzes.setAdapter(adapter);
 
-        adapter.setOnItemClickListener(this::showConfirmDialog);
+        adapter.setOnPracticeClickListener(new PracticeAdapter.OnPracticeClickListener() {
+            @Override
+            public void onStart(BaiKiemTra item) {
+                showConfirmDialog(item);
+            }
+
+            @Override
+            public void onViewResult(int idKetQua) {
+                // Chuyển sang màn hình xem chi tiết kết quả
+                Intent intent = new Intent(getActivity(), vn.huy.quanlydaotao.ui.ketqua.KetQuaActivity.class);
+                intent.putExtra("ID_KET_QUA", idKetQua);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setupViewModel() {

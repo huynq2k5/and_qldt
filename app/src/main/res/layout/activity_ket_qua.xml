@@ -79,19 +79,83 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <!-- Nút Xem chi tiết (Đặt ngoài Card) -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnViewDetail"
-        style="@style/Widget.Material3.Button.TextButton"
+    <!-- Container chứa 2 nút hành động -->
+    <LinearLayout
+        android:id="@+id/layoutActionButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="48dp"
-        android:text="XEM CHI TIẾT BÀI LÀM"
-        android:textColor="@color/primary"
-        android:fontFamily="sans-serif-black"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/cvResultInfo" />
+        app:layout_constraintTop_toBottomOf="@id/cvResultInfo">
+
+        <!-- Cụm nút Xem chi tiết -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="32dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewDetail"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_button_outline"
+                android:padding="0dp"
+                app:backgroundTint="@null"
+                app:icon="@drawable/medal"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="28dp"
+                app:iconTint="@color/primary"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-black"
+                android:text="CHI TIẾT"
+                android:textColor="@color/primary"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <!-- Cụm nút Xem chứng chỉ -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnChungChi"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="@drawable/bg_button_outline"
+                android:padding="0dp"
+                app:backgroundTint="@null"
+                app:icon="@drawable/graduation_cap"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                app:iconSize="28dp"
+                app:iconTint="@color/primary"
+                 />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="sans-serif-black"
+                android:text="CHỨNG CHỈ"
+                android:textColor="@color/primary"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
 
     <!-- Nút Hoàn tất -->
     <com.google.android.material.button.MaterialButton

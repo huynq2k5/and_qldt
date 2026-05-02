@@ -34,7 +34,8 @@ public class BaiKiemTraRepositoryImpl implements IRepositoryBaiKiemTra {
                         entity.getTieuDe(),
                         entity.getDiemDat(),
                         entity.getThoiGianLam(),
-                        entity.getTenKhoaHoc()
+                        entity.getTenKhoaHoc(),
+                        entity.getIdKetQua()
                 ));
             }
             return domainList;
@@ -56,7 +57,8 @@ public class BaiKiemTraRepositoryImpl implements IRepositoryBaiKiemTra {
                                     dto.getTieuDe(),
                                     dto.getDiemDat(),
                                     dto.getThoiGianLam(),
-                                    dto.getTenKhoaHoc()
+                                    dto.getTenKhoaHoc(),
+                                    dto.getIdKetQua()
                             ));
                         }
                         baiKiemTraDao.deleteAll();
@@ -67,7 +69,6 @@ public class BaiKiemTraRepositoryImpl implements IRepositoryBaiKiemTra {
 
             @Override
             public void onFailure(Call<List<BaiKiemTraResponse>> call, Throwable t) {
-                // Có thể Log lỗi ở đây để debug
             }
         });
     }
