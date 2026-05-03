@@ -3,6 +3,7 @@ package vn.huy.quanlydaotao.ui.login;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,11 +19,17 @@ import androidx.core.splashscreen.SplashScreen;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.concurrent.Executor;
 
 import vn.huy.quanlydaotao.R;
+import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
+import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.remote.dto.LoginResponse;
+import vn.huy.quanlydaotao.data.repository.FCMRepositoryImpl;
+import vn.huy.quanlydaotao.domain.repository.IFCMRepository;
+import vn.huy.quanlydaotao.domain.usecase.UpdateFcmTokenUseCase;
 import vn.huy.quanlydaotao.ui.main.MainActivity;
 import vn.huy.quanlydaotao.data.local.TokenManager;
 
@@ -98,18 +105,35 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginViewModel.layKetQuaDangNhap().observe(this, phanHoi -> {
-            if (phanHoi != null && phanHoi.laThanhCong()) {
-                LoginResponse.DuLieuNguoiDung user = phanHoi.layDuLieu();
-                quanLyToken.luuThongTinDangNhap(
-                        user.layToken(), user.layId(), user.layHoTen(),
-                        user.layTenVaiTro(), user.layEmail(), user.layTokenMobile()
-                );
-                chuyenSangMain();
+            if (phanHoi != null) {
+                if (phanHoi.laThanhCong()) {
+                    LoginResponse.DuLieuNguoiDung user = phanHoi.layDuLieu();
+                    quanLyToken.luuThongTinDangNhap(
+                            user.layToken(), user.layId(), user.layHoTen(),
+                            user.layTenVaiTro(), user.layEmail(), user.layTokenMobile()
+                    );
+
+                    FirebaseMessaging.getInstance().getToken()
+                            .addOnCompleteListener(task -> {
+                                if (task.isSuccessful() && task.getResult() != null) {
+                                    String fcmToken = task.getResult();
+                                    DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
+                                    IFCMRepository repo = new FCMRepositoryImpl(api);
+                                    UpdateFcmTokenUseCase useCase = new UpdateFcmTokenUseCase(repo);
+                                    useCase.execute(user.layId(), fcmToken);
+                                    Log.d("FCM_TOKEN", "Token fcm tai login: " + fcmToken);
+                                }
+                                chuyenSangMain();
+                            });
+                } else {
+                    showStatusSnackBar(phanHoi.layThongBao(), Color.parseColor("#B3261E"), Color.WHITE);
+                }
             }
         });
 
         loginViewModel.layThongBaoLoi().observe(this, loi -> {
-            if (loi != null) Toast.makeText(this, loi, Toast.LENGTH_LONG).show();
+            if (loi != null)
+                showStatusSnackBar(loi, Color.parseColor("#B3261E"), Color.WHITE);
         });
     }
     private void handleFingerprintClick() {

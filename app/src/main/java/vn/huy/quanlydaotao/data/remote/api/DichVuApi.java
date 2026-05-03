@@ -3,11 +3,14 @@ package vn.huy.quanlydaotao.data.remote.api;
 import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import vn.huy.quanlydaotao.data.remote.dto.BaiKiemTraResponse;
 import vn.huy.quanlydaotao.data.remote.dto.BaiHocResponse;
+import vn.huy.quanlydaotao.data.remote.dto.BaseResponse;
 import vn.huy.quanlydaotao.data.remote.dto.CauHoiResponse;
 import vn.huy.quanlydaotao.data.remote.dto.ChiTietKetQuaResponse;
 import vn.huy.quanlydaotao.data.remote.dto.DangKyLopRequest;
@@ -47,4 +50,10 @@ public interface DichVuApi {
     Call<KetQuaResponse> guiBaiLam(@Body KetQuaRequest request);
     @GET("get_ket_qua.php")
     Call<ChiTietKetQuaResponse> layChiTietKetQua(@Query("id_ket_qua") int idKetQua);
+    @FormUrlEncoded
+    @POST("luu_fcm_token.php")
+    Call<BaseResponse> luuFcmToken(
+            @Field("id_nguoi_dung") int idNguoiDung,
+            @Field("fcm_token") String fcmToken
+    );
 }
