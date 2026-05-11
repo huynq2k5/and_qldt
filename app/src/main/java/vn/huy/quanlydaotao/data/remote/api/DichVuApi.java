@@ -20,6 +20,8 @@ import vn.huy.quanlydaotao.data.remote.dto.KetQuaResponse;
 import vn.huy.quanlydaotao.data.remote.dto.KhoaHocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.LichMeetResponse;
 import vn.huy.quanlydaotao.data.remote.dto.LopHocResponse;
+import vn.huy.quanlydaotao.data.remote.dto.NguoiDungRequest;
+import vn.huy.quanlydaotao.data.remote.dto.NguoiDungResponse;
 
 public interface DichVuApi {
     @GET("api_khoa_hoc.php")
@@ -56,4 +58,6 @@ public interface DichVuApi {
             @Field("id_nguoi_dung") int idNguoiDung,
             @Field("fcm_token") String fcmToken
     );
+    @POST("sua_thong_tin.php")
+    Call<NguoiDungResponse> suaThongTin(@Body NguoiDungRequest request);
 }

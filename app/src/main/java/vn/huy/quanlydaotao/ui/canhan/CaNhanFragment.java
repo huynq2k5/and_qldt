@@ -135,6 +135,5 @@ public class CaNhanFragment extends Fragment {
         if (getActivity() != null) {
             getActivity().finish();
         }
-        Toast.makeText(getContext(), "Đã đăng xuất", Toast.LENGTH_SHORT).show();
     }
 }

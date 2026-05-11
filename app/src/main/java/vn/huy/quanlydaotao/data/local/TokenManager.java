@@ -79,4 +79,9 @@ public class TokenManager {
         editor.putBoolean(KHOA_VAN_TAY, trangThaiVanTay);
         editor.apply();
     }
+    public void capNhatHoTenEmail(String hoTen, String email) {
+        editor.putString(KHOA_HO_TEN, hoTen);
+        editor.putString(KHOA_EMAIL, email);
+        editor.apply();
+    }
 }
