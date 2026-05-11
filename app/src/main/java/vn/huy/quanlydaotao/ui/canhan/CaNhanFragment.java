@@ -48,6 +48,19 @@ public class CaNhanFragment extends Fragment {
         setupProfile(view);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        View view = getView();
+        if (view != null && tokenManager != null) {
+            TextView tvProfileName = view.findViewById(R.id.tvProfileName);
+            TextView tvProfileEmail = view.findViewById(R.id.tvProfileEmail);
+
+            if (tvProfileName != null) tvProfileName.setText(tokenManager.layHoTen());
+            if (tvProfileEmail != null) tvProfileEmail.setText(tokenManager.layEmail());
+        }
+    }
+
     private void setupEdgeToEdge(View view) {
         View header = view.findViewById(R.id.layoutHeader);
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
@@ -66,6 +79,7 @@ public class CaNhanFragment extends Fragment {
         View btnLogout = view.findViewById(R.id.btnLogout);
         btnEditProfile = view.findViewById(R.id.btnEditProfile);
         LinearLayout btnBiometric = view.findViewById(R.id.btnBiometric);
+        LinearLayout btnChangePassword = view.findViewById(R.id.btnChangePassword);
         switchBiometric = view.findViewById(R.id.switchBiometric);
 
         if (tvProfileName != null) tvProfileName.setText(tokenManager.layHoTen());
@@ -87,6 +101,13 @@ public class CaNhanFragment extends Fragment {
 
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> xacNhanDangXuat());
+        }
+
+        if (btnChangePassword != null) {
+            btnChangePassword.setOnClickListener(v -> {
+                DoiPassBottomSheet doiPassBottomSheet = DoiPassBottomSheet.newInstance();
+                doiPassBottomSheet.show(getChildFragmentManager(), "DoiPassBottomSheet");
+            });
         }
     }
 
