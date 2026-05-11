@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitClient {
 
     private static Retrofit retrofit;
-    private static final String BASE_URL = "https://curved-juline-huy01-d62d7a12.koyeb.app/";
+    private static final String BASE_URL = "https://da2.nguyenquanghuyvlg.id.vn"; //"https://curved-juline-huy01-d62d7a12.koyeb.app/"
 
     public static Retrofit getClient() {
         if (retrofit == null) {
