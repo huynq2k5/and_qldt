@@ -63,7 +63,15 @@ public class BaiHocFragment extends Fragment {
         setupViews(view);
         setupViewModels();
         observeData();
-        viewModel.taiLaiDuLieu(idKhoaHoc);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (tokenManager != null && viewModel != null) {
+            int idNguoiDung = tokenManager.layId();
+            viewModel.taiLaiDuLieu(idKhoaHoc, idNguoiDung);
+        }
     }
 
     private void setupWindowInsets(View view) {
@@ -134,8 +142,16 @@ public class BaiHocFragment extends Fragment {
                 }
             }
             if (!realVideoList.isEmpty()) {
+                int videoDaXem = 0;
+                for (BaiHoc v : realVideoList) {
+                    if (v.getPhanTram() == 100) {
+                        videoDaXem++;
+                    }
+                }
+                int phanTramTongVideo = (videoDaXem * 100) / realVideoList.size();
+
                 BaiHoc videoRepresent = new BaiHoc(-1, idKhoaHoc,
-                        "Tổng số video (" + realVideoList.size() + ")", "video", "");
+                        "Tổng số video (" + realVideoList.size() + ")", "video", "", phanTramTongVideo);
                 displayList.add(0, videoRepresent);
             }
             adapter.setItems(displayList);

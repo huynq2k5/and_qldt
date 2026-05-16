@@ -17,7 +17,7 @@ public class BaiHocViewModel extends ViewModel {
         return useCase.execute(idKhoaHoc);
     }
 
-    public void taiLaiDuLieu(int idKhoaHoc) {
-        useCase.refresh(idKhoaHoc);
+    public void taiLaiDuLieu(int idKhoaHoc, int idNguoiDung) {
+        useCase.refresh(idKhoaHoc, idNguoiDung);
     }
 }

@@ -16,7 +16,7 @@ public class LayDanhSachBaiHocUseCase {
         return repository.getDanhSachBaiHoc(idKhoaHoc);
     }
 
-    public void refresh(int idKhoaHoc) {
-        repository.refreshBaiHoc(idKhoaHoc);
+    public void refresh(int idKhoaHoc, int idNguoiDung) {
+        repository.refreshBaiHoc(idKhoaHoc, idNguoiDung);
     }
 }

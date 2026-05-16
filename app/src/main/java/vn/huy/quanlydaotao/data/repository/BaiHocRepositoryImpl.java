@@ -28,15 +28,15 @@ public class BaiHocRepositoryImpl implements IBaiHocRepository {
         return Transformations.map(baiHocDao.getBaiHocByKhoaHoc(idKhoaHoc), entities -> {
             List<BaiHoc> models = new ArrayList<>();
             for (BaiHocEntity entity : entities) {
-                models.add(new BaiHoc(entity.id, entity.idKhoaHoc, entity.tieuDe, entity.loaiNoiDung, entity.duongDanTep));
+                models.add(new BaiHoc(entity.id, entity.idKhoaHoc, entity.tieuDe, entity.loaiNoiDung, entity.duongDanTep, entity.phanTram));
             }
             return models;
         });
     }
 
     @Override
-    public void refreshBaiHoc(int idKhoaHoc) {
-        api.getDanhSachBaiHoc(idKhoaHoc).enqueue(new Callback<List<BaiHocResponse>>() {
+    public void refreshBaiHoc(int idKhoaHoc, int idNguoiDung) {
+        api.getDanhSachBaiHoc(idKhoaHoc, idNguoiDung).enqueue(new Callback<List<BaiHocResponse>>() {
             @Override
             public void onResponse(Call<List<BaiHocResponse>> call, Response<List<BaiHocResponse>> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -49,6 +49,7 @@ public class BaiHocRepositoryImpl implements IBaiHocRepository {
                             entity.tieuDe = dto.getTieuDe();
                             entity.loaiNoiDung = dto.getLoaiNoiDung();
                             entity.duongDanTep = dto.getDuongDanTep();
+                            entity.phanTram = dto.getPhanTram();
                             entities.add(entity);
                         }
                         baiHocDao.insertAll(entities);
