@@ -26,6 +26,8 @@ import vn.huy.quanlydaotao.data.remote.dto.NguoiDungRequest;
 import vn.huy.quanlydaotao.data.remote.dto.NguoiDungResponse;
 import vn.huy.quanlydaotao.data.remote.dto.ThongBaoRequest;
 import vn.huy.quanlydaotao.data.remote.dto.ThongBaoResponse;
+import vn.huy.quanlydaotao.data.remote.dto.TienDoRequest;
+import vn.huy.quanlydaotao.data.remote.dto.TienDoResponse;
 
 public interface DichVuApi {
     @GET("api_khoa_hoc.php")
@@ -68,4 +70,6 @@ public interface DichVuApi {
     Call<DoiPassResponse> doiMatKhau(@Body DoiPassRequest request);
     @POST("lay_thong_bao.php")
     Call<ThongBaoResponse> layThongBao(@Body ThongBaoRequest request);
+    @POST("cap_nhat_tien_do.php")
+    Call<TienDoResponse> luuTienDo(@Body TienDoRequest request);
 }

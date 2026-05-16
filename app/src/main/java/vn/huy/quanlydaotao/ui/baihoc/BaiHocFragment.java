@@ -17,18 +17,18 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.snackbar.Snackbar;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
+import vn.huy.quanlydaotao.data.local.TokenManager;
 import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
 import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.BaiHocRepositoryImpl;
+import vn.huy.quanlydaotao.data.repository.TienDoRepositoryImpl;
 import vn.huy.quanlydaotao.domain.model.BaiHoc;
+import vn.huy.quanlydaotao.domain.usecase.CapNhatTienDoUseCase;
 import vn.huy.quanlydaotao.domain.usecase.LayDanhSachBaiHocUseCase;
 import vn.huy.quanlydaotao.ui.main.MainViewModel;
 import vn.huy.quanlydaotao.ui.video.VideoPlayerActivity;
@@ -38,6 +38,8 @@ public class BaiHocFragment extends Fragment {
     private BaiHocAdapter adapter;
     private BaiHocViewModel viewModel;
     private MainViewModel mainViewModel;
+    private CapNhatTienDoUseCase capNhatTienDoUseCase;
+    private TokenManager tokenManager;
     private final List<BaiHoc> realVideoList = new ArrayList<>();
 
     @Override
@@ -57,14 +59,13 @@ public class BaiHocFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         setupWindowInsets(view);
         setupViews(view);
         setupViewModels();
         observeData();
-
         viewModel.taiLaiDuLieu(idKhoaHoc);
     }
+
     private void setupWindowInsets(View view) {
         View header = view.findViewById(R.id.layoutHeader);
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
@@ -76,9 +77,9 @@ public class BaiHocFragment extends Fragment {
             return WindowInsetsCompat.CONSUMED;
         });
     }
+
     private void setupViews(View view) {
         view.findViewById(R.id.btnBack).setOnClickListener(v -> requireActivity().onBackPressed());
-
         RecyclerView rv = view.findViewById(R.id.rvBaiHoc);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new BaiHocAdapter();
@@ -92,17 +93,23 @@ public class BaiHocFragment extends Fragment {
 
             @Override
             public void onPdfClick(BaiHoc pdfLesson) {
-                handleOpenPdf(pdfLesson.getDuongDanTep());
+                handleOpenPdf(pdfLesson);
             }
         });
     }
+
     private void setupViewModels() {
         mainViewModel = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-
+        tokenManager = new TokenManager(requireContext());
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
+
         BaiHocRepositoryImpl repo = new BaiHocRepositoryImpl(
                 CoSoDuLieuApp.getInstance(requireContext()).baiHocDao(), api);
         LayDanhSachBaiHocUseCase useCase = new LayDanhSachBaiHocUseCase(repo);
+
+        TienDoRepositoryImpl tienDoRepo = new TienDoRepositoryImpl(
+                CoSoDuLieuApp.getInstance(requireContext()).tienDoDao(), api);
+        capNhatTienDoUseCase = new CapNhatTienDoUseCase(tienDoRepo);
 
         viewModel = new ViewModelProvider(this, new ViewModelProvider.Factory() {
             @NonNull
@@ -113,13 +120,12 @@ public class BaiHocFragment extends Fragment {
             }
         }).get(BaiHocViewModel.class);
     }
+
     private void observeData() {
         viewModel.getDanhSachBaiHoc(idKhoaHoc).observe(getViewLifecycleOwner(), items -> {
             if (items == null) return;
-
             List<BaiHoc> displayList = new ArrayList<>();
             realVideoList.clear();
-
             for (BaiHoc item : items) {
                 if ("video".equals(item.getLoaiNoiDung())) {
                     realVideoList.add(item);
@@ -127,7 +133,6 @@ public class BaiHocFragment extends Fragment {
                     displayList.add(item);
                 }
             }
-
             if (!realVideoList.isEmpty()) {
                 BaiHoc videoRepresent = new BaiHoc(-1, idKhoaHoc,
                         "Tổng số video (" + realVideoList.size() + ")", "video", "");
@@ -136,36 +141,37 @@ public class BaiHocFragment extends Fragment {
             adapter.setItems(displayList);
         });
     }
+
     private void handleVideoGroupClick() {
         if (realVideoList.isEmpty()) return;
-
         Boolean isConnected = mainViewModel.getIsConnected().getValue();
         View rootView = getView();
         if (rootView == null) return;
-
         if (isConnected != null && !isConnected) {
             showStatusSnackbar(rootView, "Không có mạng, không thể xem video bài giảng!", "#F59E0B", Color.BLACK);
             return;
         }
-
         Intent intent = new Intent(getContext(), VideoPlayerActivity.class);
         intent.putExtra("danh_sach_video", new ArrayList<>(realVideoList));
         startActivity(intent);
     }
-    private void handleOpenPdf(String url) {
+
+    private void handleOpenPdf(BaiHoc pdfLesson) {
         Boolean isConnected = mainViewModel.getIsConnected().getValue();
         View rootView = getView();
         if (rootView == null) return;
-
         if (isConnected != null && !isConnected) {
             showStatusSnackbar(rootView, "Không có mạng, không thể tải tài liệu!", "#F59E0B", Color.BLACK);
             return;
         }
-
+        String url = pdfLesson.getDuongDanTep();
         if (url == null || url.isEmpty()) {
             showStatusSnackbar(rootView, "Lỗi: Tài liệu chưa có liên kết!", "#B3261E", Color.WHITE);
             return;
         }
+
+        int idNguoiDung = tokenManager.layId();
+        capNhatTienDoUseCase.thucHienCapNhat(idNguoiDung, pdfLesson.getId(), 100).observe(getViewLifecycleOwner(), response -> {});
 
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
@@ -173,16 +179,15 @@ public class BaiHocFragment extends Fragment {
             showStatusSnackbar(rootView, "Không tìm thấy ứng dụng đọc PDF!", "#B3261E", Color.WHITE);
         }
     }
+
     private void showStatusSnackbar(View view, String message, String colorHex, int textColor) {
         Snackbar snackbar = Snackbar.make(view, message, Snackbar.LENGTH_LONG);
         snackbar.setBackgroundTint(Color.parseColor(colorHex));
         snackbar.setTextColor(textColor);
-
         View bottomMenu = requireActivity().findViewById(R.id.bottom_menu);
         if (bottomMenu != null) {
             snackbar.setAnchorView(bottomMenu);
         }
-
         snackbar.show();
     }
 }
