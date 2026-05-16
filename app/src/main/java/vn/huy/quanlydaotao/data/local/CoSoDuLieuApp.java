@@ -15,6 +15,7 @@ import vn.huy.quanlydaotao.data.local.dao.KhoaHocDao;
 import vn.huy.quanlydaotao.data.local.dao.LichMeetDao;
 import vn.huy.quanlydaotao.data.local.dao.LopHocDao;
 import vn.huy.quanlydaotao.data.local.dao.BaiHocDao;
+import vn.huy.quanlydaotao.data.local.dao.ThongBaoDao;
 import vn.huy.quanlydaotao.data.local.entity.BaiKiemTraEntity;
 import vn.huy.quanlydaotao.data.local.entity.BaiLamTamEntity;
 import vn.huy.quanlydaotao.data.local.entity.CauHoiEntity;
@@ -25,6 +26,7 @@ import vn.huy.quanlydaotao.data.local.entity.KhoaHocEntity;
 import vn.huy.quanlydaotao.data.local.entity.LichMeetEntity;
 import vn.huy.quanlydaotao.data.local.entity.LopHocEntity;
 import vn.huy.quanlydaotao.data.local.entity.BaiHocEntity;
+import vn.huy.quanlydaotao.data.local.entity.ThongBaoEntity;
 
 @Database(entities = {KhoaHocEntity.class,
         LopHocEntity.class,
@@ -35,7 +37,8 @@ import vn.huy.quanlydaotao.data.local.entity.BaiHocEntity;
         CauHoiEntity.class,
         BaiLamTamEntity.class,
         KetQuaEntity.class,
-        ChiTietKetQuaEntity.class}, version = 12, exportSchema = false)
+        ChiTietKetQuaEntity.class,
+        ThongBaoEntity.class}, version = 14, exportSchema = false)
 public abstract class CoSoDuLieuApp extends RoomDatabase {
     private static CoSoDuLieuApp instance;
 
@@ -49,6 +52,7 @@ public abstract class CoSoDuLieuApp extends RoomDatabase {
     public abstract BaiLamTamDao baiLamTamDao();
     public abstract KetQuaDao ketQuaDao();
     public abstract ChiTietKetQuaDao chiTietKetQuaDao();
+    public abstract ThongBaoDao thongBaoDao();
     public static synchronized CoSoDuLieuApp getInstance(Context context) {
         if (instance == null) {
             instance = Room.databaseBuilder(context.getApplicationContext(),

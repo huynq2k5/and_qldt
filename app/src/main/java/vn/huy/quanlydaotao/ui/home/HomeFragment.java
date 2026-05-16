@@ -1,9 +1,12 @@
 package vn.huy.quanlydaotao.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +31,7 @@ import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.KhoaHocRepositoryImpl;
 import vn.huy.quanlydaotao.domain.usecase.LayDanhSachKhoaHocUseCase;
 import vn.huy.quanlydaotao.ui.khoahoc.KhoaHocViewModel;
+import vn.huy.quanlydaotao.ui.thongbao.ThongBaoActivity;
 
 public class HomeFragment extends Fragment {
 
@@ -38,6 +42,7 @@ public class HomeFragment extends Fragment {
     private TokenManager tokenManager;
     private ShimmerFrameLayout shimmerHomeCourses;
     private RecyclerView rvHomeCourses;
+    private ImageView btnNotification;
 
     public HomeFragment() {}
 
@@ -85,6 +90,12 @@ public class HomeFragment extends Fragment {
         if (tvGreeting != null) {
             tvGreeting.setText("" + tokenManager.layVaiTro());
         }
+
+        btnNotification = view.findViewById(R.id.btnNotification);
+        btnNotification.setOnClickListener(v -> {
+            Intent intent = new Intent(requireContext(), ThongBaoActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupHomeData(View view) {
