@@ -32,6 +32,8 @@ public class QuizViewModel extends ViewModel {
     private List<CauHoi> questionList = new ArrayList<>();
     private CountDownTimer timer;
     private boolean isTimerStarted = false;
+    private int savedIdUser = 0;
+    private int savedIdBkt = 0;
 
     public QuizViewModel(LayCauHoiUseCase layCauHoiUseCase, BaiLamTamDao baiLamTamDao, NopBaiUseCase nopBaiUseCase) {
         this.layCauHoiUseCase = layCauHoiUseCase;
@@ -40,6 +42,8 @@ public class QuizViewModel extends ViewModel {
     }
 
     public void loadQuestions(int idUser, int idBkt) {
+        this.savedIdUser = idUser;
+        this.savedIdBkt = idBkt;
         if (questionList.isEmpty()) {
             layCauHoiUseCase.refresh(idUser, idBkt);
         }
@@ -108,6 +112,7 @@ public class QuizViewModel extends ViewModel {
             @Override
             public void onFinish() {
                 remainingTime.setValue("00 : 00 : 00");
+                submitQuiz(savedIdUser, savedIdBkt);
             }
         }.start();
     }

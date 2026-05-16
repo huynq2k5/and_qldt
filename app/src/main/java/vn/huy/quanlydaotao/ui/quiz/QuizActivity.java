@@ -25,15 +25,18 @@ import vn.huy.quanlydaotao.domain.usecase.LayCauHoiUseCase;
 import vn.huy.quanlydaotao.domain.usecase.NopBaiUseCase;
 import vn.huy.quanlydaotao.ui.ketqua.KetQuaActivity;
 import vn.huy.quanlydaotao.ui.main.DialogHelper;
+import vn.huy.quanlydaotao.util.NetworkManager;
 
 public class QuizActivity extends AppCompatActivity {
 
     private QuizViewModel viewModel;
+    private NetworkManager networkManager;
     private TextView tvQuestionText, tvTimer;
     private RadioGroup rgAnswers;
     private RadioButton rbA, rbB, rbC, rbD;
     private int idBkt;
     private View layoutLoading;
+    private boolean isConnected = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class QuizActivity extends AppCompatActivity {
 
         initViews();
         setupViewModel();
+        setupNetworkMonitoring();
         observeViewModel();
 
         viewModel.startTimer(timeLimit);
@@ -73,6 +77,12 @@ public class QuizActivity extends AppCompatActivity {
         findViewById(R.id.btnQuestionList).setOnClickListener(v -> showQuestionListDialog());
 
         findViewById(R.id.btnSubmitQuiz).setOnClickListener(v -> {
+            if (!isConnected) {
+                DialogHelper.showNotificationDialog(
+                        this, "Không có mạng", "Không có kết nối internet, vui lòng thử lại sau khi có internet!", "Đóng", null);
+                return;
+            }
+
             DialogHelper.showConfirmDialog(
                     this, "Nộp bài", "Bạn có chắc muốn nộp bài?", "Nộp bài", "Làm tiếp",
                     () -> {
@@ -122,6 +132,11 @@ public class QuizActivity extends AppCompatActivity {
                 return (T) new QuizViewModel(layCauHoiUseCase, db.baiLamTamDao(), nopBaiUseCase);
             }
         }).get(QuizViewModel.class);
+    }
+
+    private void setupNetworkMonitoring() {
+        networkManager = new NetworkManager(this, status -> isConnected = status);
+        networkManager.startMonitoring();
     }
 
     private void observeViewModel() {
@@ -213,12 +228,31 @@ public class QuizActivity extends AppCompatActivity {
         List<CauHoi> questions = viewModel.getQuestionList();
         rvNumbers.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(this, 5));
         rvNumbers.setAdapter(adapter);
-        adapter.setData(questions.size(), viewModel.getCurrentIndex().getValue(), new ArrayList<>(viewModel.getUserAnswers().getValue().keySet()));
+
+        List<Integer> answeredPositions = new ArrayList<>();
+        Map<Integer, String> answers = viewModel.getUserAnswers().getValue();
+        if (questions != null && answers != null) {
+            for (int i = 0; i < questions.size(); i++) {
+                if (answers.containsKey(questions.get(i).getId())) {
+                    answeredPositions.add(i);
+                }
+            }
+        }
+
+        adapter.setData(questions.size(), viewModel.getCurrentIndex().getValue(), answeredPositions);
         adapter.setOnItemClickListener(position -> {
             viewModel.setCurrentIndex(position);
             dialog.dismiss();
         });
         dialog.setContentView(view);
         dialog.show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (networkManager != null) {
+            networkManager.stopMonitoring();
+        }
     }
 }
