@@ -13,7 +13,6 @@ public class LayDanhSachKhoaHocUseCase {
     }
 
     public LiveData<List<KhoaHoc>> execute() {
-        // Có thể thực hiện thêm logic nghiệp vụ ở đây (ví dụ: lọc, sắp xếp)
         return repository.getDanhSachKhoaHoc();
     }
 

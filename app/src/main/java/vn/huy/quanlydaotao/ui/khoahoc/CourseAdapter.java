@@ -5,13 +5,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
+import com.bumptech.glide.Glide;
 import java.util.ArrayList;
 import java.util.List;
-
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.domain.model.KhoaHoc;
 
@@ -45,8 +43,19 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         KhoaHoc item = items.get(position);
         holder.tvTitle.setText(item.getTenKhoaHoc());
         holder.tvDesc.setText(item.getMoTa());
-        holder.imgIcon.setImageResource(R.drawable.books);
-        
+
+        String urlAnh = item.getDuongDanAnh();
+        if (urlAnh != null && !urlAnh.isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(urlAnh)
+                    .placeholder(R.drawable.books)
+                    .error(R.drawable.books)
+                    .centerCrop()
+                    .into(holder.imgIcon);
+        } else {
+            holder.imgIcon.setImageResource(R.drawable.books);
+        }
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onItemClick(item);

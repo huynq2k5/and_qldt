@@ -22,8 +22,8 @@
             android:id="@+id/imgTopicIcon"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/books"
-            app:tint="@color/primary" />
+            android:scaleType="centerCrop"
+            android:src="@drawable/books" />
 
         <LinearLayout
             android:layout_width="0dp"

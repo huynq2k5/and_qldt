@@ -41,7 +41,7 @@ import vn.huy.quanlydaotao.data.local.entity.TienDoEntity;
         KetQuaEntity.class,
         ChiTietKetQuaEntity.class,
         ThongBaoEntity.class,
-        TienDoEntity.class}, version = 16, exportSchema = false)
+        TienDoEntity.class}, version = 17, exportSchema = false)
 public abstract class CoSoDuLieuApp extends RoomDatabase {
     private static CoSoDuLieuApp instance;
 

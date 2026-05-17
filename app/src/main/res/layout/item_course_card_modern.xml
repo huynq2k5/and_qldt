@@ -58,7 +58,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:fontFamily="sans-serif-black"
+                android:fontFamily="sans-serif"
                 android:maxLines="2"
                 android:text="Lập trình hệ thống IoT với Arduino"
                 android:textColor="?android:attr/textColorPrimary"
@@ -76,6 +76,12 @@
                     android:layout_height="14dp"
                     android:src="@drawable/ic_time"
                     app:tint="#64748B" />
+                <TextView
+                    android:id="@+id/tvTg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="tg"
+                    android:paddingStart="5dp"/>
 
             </LinearLayout>
         </LinearLayout>

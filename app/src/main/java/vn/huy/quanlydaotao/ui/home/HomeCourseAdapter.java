@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +46,19 @@ public class HomeCourseAdapter extends RecyclerView.Adapter<HomeCourseAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         KhoaHoc item = items.get(position);
         holder.tvTitle.setText(item.getTenKhoaHoc());
+        holder.tvTg.setText(item.getNgayTao());
 
-
-        holder.imgThumbnail.setImageResource(R.drawable.bg_3d_placeholder);
+        String urlAnh = item.getDuongDanAnh();
+        if (urlAnh != null && !urlAnh.isEmpty()) {
+            Glide.with(holder.itemView.getContext())
+                    .load(urlAnh)
+                    .placeholder(R.drawable.bg_3d_placeholder)
+                    .error(R.drawable.bg_3d_placeholder)
+                    .centerCrop()
+                    .into(holder.imgThumbnail);
+        } else {
+            holder.imgThumbnail.setImageResource(R.drawable.bg_3d_placeholder);
+        }
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
@@ -62,12 +74,13 @@ public class HomeCourseAdapter extends RecyclerView.Adapter<HomeCourseAdapter.Vi
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgThumbnail;
-        TextView tvTitle;
+        TextView tvTitle, tvTg;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imgThumbnail = itemView.findViewById(R.id.imgCourseThumbnail);
             tvTitle = itemView.findViewById(R.id.tvCourseTitle);
+            tvTg = itemView.findViewById(R.id.tvTg);
         }
     }
 }

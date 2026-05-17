@@ -2,10 +2,8 @@ package vn.huy.quanlydaotao.data.repository;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Transformations;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,7 +28,13 @@ public class KhoaHocRepositoryImpl implements IKhoaHocRepository {
         return Transformations.map(khoaHocDao.getDanhSachKhoaHoc(), entities -> {
             List<KhoaHoc> domainList = new ArrayList<>();
             for (KhoaHocEntity entity : entities) {
-                domainList.add(new KhoaHoc(entity.getId(), entity.getTenKhoaHoc(), entity.getMoTa(), entity.getNgayTao()));
+                domainList.add(new KhoaHoc(
+                        entity.getId(),
+                        entity.getTenKhoaHoc(),
+                        entity.getMoTa(),
+                        entity.getNgayTao(),
+                        entity.getDuongDanAnh()
+                ));
             }
             return domainList;
         });
@@ -45,7 +49,13 @@ public class KhoaHocRepositoryImpl implements IKhoaHocRepository {
                     new Thread(() -> {
                         List<KhoaHocEntity> entities = new ArrayList<>();
                         for (KhoaHocResponse dto : response.body()) {
-                            entities.add(new KhoaHocEntity(dto.getId(), dto.getTenKhoaHoc(), dto.getMoTa(), dto.getNgayTao()));
+                            entities.add(new KhoaHocEntity(
+                                    dto.getId(),
+                                    dto.getTenKhoaHoc(),
+                                    dto.getMoTa(),
+                                    dto.getNgayTao(),
+                                    dto.getDuongDanAnh()
+                            ));
                         }
                         khoaHocDao.deleteAll();
                         khoaHocDao.insertAll(entities);
@@ -55,7 +65,6 @@ public class KhoaHocRepositoryImpl implements IKhoaHocRepository {
 
             @Override
             public void onFailure(Call<List<KhoaHocResponse>> call, Throwable t) {
-                // Xử lý lỗi
             }
         });
     }
