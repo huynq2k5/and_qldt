@@ -66,9 +66,14 @@ public class ThongBaoActivity extends AppCompatActivity {
         tokenManager = new TokenManager(this);
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         CoSoDuLieuApp db = CoSoDuLieuApp.getInstance(this);
+
         ThongBaoRepositoryImpl repo = new ThongBaoRepositoryImpl(db.thongBaoDao(), api);
         LayDanhSachThongBaoUseCase useCase = new LayDanhSachThongBaoUseCase(repo);
-        ThongBaoViewModelFactory factory = new ThongBaoViewModelFactory(useCase);
+
+        vn.huy.quanlydaotao.data.repository.DaDocRepositoryImpl daDocRepo = new vn.huy.quanlydaotao.data.repository.DaDocRepositoryImpl(api);
+        vn.huy.quanlydaotao.domain.usecase.DanhDauDaDocUseCase daDocUseCase = new vn.huy.quanlydaotao.domain.usecase.DanhDauDaDocUseCase(daDocRepo);
+
+        ThongBaoViewModelFactory factory = new ThongBaoViewModelFactory(useCase, daDocUseCase);
         viewModel = new ViewModelProvider(this, factory).get(ThongBaoViewModel.class);
     }
 
@@ -78,7 +83,14 @@ public class ThongBaoActivity extends AppCompatActivity {
         rvThongBao.setAdapter(adapter);
 
         adapter.setOnThongBaoClickListener(thongBao -> {
-            
+            if (thongBao.getDaXem() != 1) {
+                viewModel.danhDauDaDoc(thongBao.getId()).observe(this, response -> {
+                    if (response != null && response.isSuccess()) {
+                        int idNguoiDung = tokenManager.layId();
+                        viewModel.layDanhSachThongBao(idNguoiDung).observe(this, this::hienThiGiaoDien);
+                    }
+                });
+            }
         });
     }
 

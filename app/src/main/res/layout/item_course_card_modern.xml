@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="260dp"
+    android:layout_width="210dp"
     android:layout_height="wrap_content"
     android:layout_marginEnd="16dp"
     android:layout_marginBottom="8dp"
@@ -17,7 +17,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="150dp">
+            android:layout_height="120dp">
 
             <ImageView
                 android:id="@+id/imgCourseThumbnail"
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="12dp">
 
             <TextView
                 android:id="@+id/tvCourseTitle"
@@ -62,27 +62,29 @@
                 android:maxLines="2"
                 android:text="Lập trình hệ thống IoT với Arduino"
                 android:textColor="?android:attr/textColorPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
                     android:src="@drawable/ic_time"
                     app:tint="#64748B" />
+
                 <TextView
                     android:id="@+id/tvTg"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="tg"
-                    android:paddingStart="5dp"/>
-
+                    android:textSize="12sp"
+                    android:textColor="#64748B"
+                    android:paddingStart="5dp" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

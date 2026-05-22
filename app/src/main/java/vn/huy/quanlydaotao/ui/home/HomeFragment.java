@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,6 +22,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import vn.huy.quanlydaotao.R;
@@ -30,6 +33,8 @@ import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
 import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.KhoaHocRepositoryImpl;
 import vn.huy.quanlydaotao.domain.usecase.LayDanhSachKhoaHocUseCase;
+import vn.huy.quanlydaotao.ui.canhan.DoiPassBottomSheet;
+import vn.huy.quanlydaotao.ui.canhan.EditProfileActivity;
 import vn.huy.quanlydaotao.ui.khoahoc.KhoaHocViewModel;
 import vn.huy.quanlydaotao.ui.thongbao.ThongBaoActivity;
 
@@ -37,8 +42,6 @@ public class HomeFragment extends Fragment {
 
     private KhoaHocViewModel khoaHocViewModel;
     private HomeCourseAdapter courseAdapter;
-    private TextView tvActiveCourseTitle;
-    private LinearProgressIndicator courseProgress;
     private TokenManager tokenManager;
     private ShimmerFrameLayout shimmerHomeCourses;
     private RecyclerView rvHomeCourses;
@@ -77,8 +80,7 @@ public class HomeFragment extends Fragment {
         if (shimmerHomeCourses != null) {
             shimmerHomeCourses.startShimmer();
         }
-        tvActiveCourseTitle = view.findViewById(R.id.tvActiveCourseTitle);
-        courseProgress = view.findViewById(R.id.courseProgress);
+
 
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvGreeting = view.findViewById(R.id.tvGreeting);
@@ -96,6 +98,18 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(requireContext(), ThongBaoActivity.class);
             startActivity(intent);
         });
+
+        MaterialCardView btnSettings = view.findViewById(R.id.btnSettings);
+        btnSettings.setOnClickListener(v -> {
+            DoiPassBottomSheet doiPassBottomSheet = DoiPassBottomSheet.newInstance();
+            doiPassBottomSheet.show(getChildFragmentManager(), "DoiPassBottomSheet");
+        });
+
+        MaterialCardView btnAccount = view.findViewById(R.id.btnAccount);
+        btnAccount.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), EditProfileActivity.class));
+        });
+
     }
 
     private void setupHomeData(View view) {
@@ -140,9 +154,6 @@ public class HomeFragment extends Fragment {
                 if (rvHomeCourses != null) {
                     rvHomeCourses.setVisibility(View.VISIBLE);
                 }
-
-                tvActiveCourseTitle.setText(danhSach.get(0).getTenKhoaHoc());
-                courseProgress.setProgress(65, true);
             }
         });
 
