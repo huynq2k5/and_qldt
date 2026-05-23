@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cvMusicPanel"
+    android:layout_width="220dp"
+    android:layout_height="280dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="12dp"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Chọn nhạc chờ"
+            android:textColor="#1E293B"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="12dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="#F8FAFC"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E2E8F0"/>
+
+        <ListView
+            android:id="@+id/lvMusic"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F1F5F9"
+            android:divider="#E2E8F0"
+            android:dividerHeight="1dp"
+            android:padding="8dp"
+            android:clipToPadding="false"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

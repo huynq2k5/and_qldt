@@ -196,6 +196,17 @@ public class HocTrucTuyenFragment extends Fragment {
             return;
         }
 
+        if (getActivity() instanceof vn.huy.quanlydaotao.ui.main.MainActivity) {
+            vn.huy.quanlydaotao.ui.main.MainActivity mainActivity = (vn.huy.quanlydaotao.ui.main.MainActivity) getActivity();
+            if (mainActivity.kiemTraQuyenBeNoi()) {
+                Intent intentService = new Intent(requireContext(), vn.huy.quanlydaotao.ui.hoctructuyen.NhacChoService.class);
+                androidx.core.content.ContextCompat.startForegroundService(requireContext(), intentService);
+            } else {
+                mainActivity.yeuCauQuyenBeNoi();
+                return;
+            }
+        }
+
         try {
             startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
         } catch (Exception e) {

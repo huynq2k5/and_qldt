@@ -1,7 +1,11 @@
 package vn.huy.quanlydaotao.ui.main;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 
@@ -141,6 +145,23 @@ public class MainActivity extends AppCompatActivity {
         snackbar.setTextColor(textColor);
         snackbar.setAnchorView(bottomMenu);
         snackbar.show();
+    }
+
+    public boolean kiemTraQuyenBeNoi() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return Settings.canDrawOverlays(this);
+        }
+        return true;
+    }
+
+    public void yeuCauQuyenBeNoi() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Intent intent = new Intent(
+                    Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName())
+            );
+            startActivity(intent);
+        }
     }
 
     @Override
