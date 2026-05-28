@@ -19,7 +19,9 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
     private OnLopHocClickListener listener;
 
     public interface OnLopHocClickListener {
-        void onLopHocClick(LopHoc lopHoc);
+        void onVaoHocClick(LopHoc lopHoc);
+        void onHuyDangKyClick(LopHoc lopHoc);
+        void onDangKyClick(LopHoc lopHoc);
     }
 
     public void setOnLopHocClickListener(OnLopHocClickListener listener) {
@@ -47,14 +49,26 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
         if (item.getDaDangKy() == 1) {
             holder.btnAction.setText("Vào học ngay");
             holder.btnAction.setBackgroundColor(Color.parseColor("#1E3A8A"));
+            holder.btnHuyAction.setVisibility(View.VISIBLE);
         } else {
             holder.btnAction.setText("Đăng ký lớp");
             holder.btnAction.setBackgroundColor(Color.parseColor("#2eb85c"));
+            holder.btnHuyAction.setVisibility(View.GONE);
         }
 
         holder.btnAction.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onLopHocClick(item);
+                if (item.getDaDangKy() == 1) {
+                    listener.onVaoHocClick(item);
+                } else {
+                    listener.onDangKyClick(item);
+                }
+            }
+        });
+
+        holder.btnHuyAction.setOnClickListener(v -> {
+            if (listener != null && item.getDaDangKy() == 1) {
+                listener.onHuyDangKyClick(item);
             }
         });
     }
@@ -66,13 +80,14 @@ public class LopHocAdapter extends RecyclerView.Adapter<LopHocAdapter.ViewHolder
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTenLop, tvThoiGian;
-        MaterialButton btnAction;
+        MaterialButton btnAction, btnHuyAction;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTenLop = itemView.findViewById(R.id.tvTenLop);
             tvThoiGian = itemView.findViewById(R.id.tvThoiGian);
             btnAction = itemView.findViewById(R.id.btnVaoHoc);
+            btnHuyAction = itemView.findViewById(R.id.btnHuyDangKy);
         }
     }
 }

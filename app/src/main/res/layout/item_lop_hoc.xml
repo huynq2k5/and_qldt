@@ -50,17 +50,34 @@
                 android:textSize="13sp" />
         </LinearLayout>
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Widget.Material3.Button.TonalButton"
-            android:id="@+id/btnVaoHoc"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
             android:layout_marginTop="8dp"
-            android:text="Vào học"
-            android:backgroundTint="@color/primary"
-            android:textColor="?android:attr/colorBackground"
-            android:textAllCaps="false"
-            app:cornerRadius="16dp" />
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.TextButton"
+                android:id="@+id/btnHuyDangKy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:text="Hủy đăng ký"
+                android:textColor="#F44336"
+                android:visibility="gone"
+                android:textAllCaps="false" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:id="@+id/btnVaoHoc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vào học"
+                android:backgroundTint="@color/primary"
+                android:textColor="?android:attr/colorBackground"
+                android:textAllCaps="false"
+                app:cornerRadius="16dp" />
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

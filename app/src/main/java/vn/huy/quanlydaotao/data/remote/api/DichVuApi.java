@@ -33,6 +33,8 @@ import vn.huy.quanlydaotao.data.remote.dto.ThongBaoRequest;
 import vn.huy.quanlydaotao.data.remote.dto.ThongBaoResponse;
 import vn.huy.quanlydaotao.data.remote.dto.TienDoRequest;
 import vn.huy.quanlydaotao.data.remote.dto.TienDoResponse;
+import vn.huy.quanlydaotao.data.remote.dto.XoaDangKyRequest;
+import vn.huy.quanlydaotao.data.remote.dto.XoaDangKyResponse;
 
 public interface DichVuApi {
     @GET("api_khoa_hoc.php")
@@ -84,4 +86,6 @@ public interface DichVuApi {
     Call<DaDocResponse> danhDauDaDoc(@Body DaDocRequest request);
     @POST("xem_lich_su.php")
     Call<LichSuResponse> xemLichSuKiemTra(@Body Map<String, Integer> requestBody);
+    @POST("xoa_dang_ky.php")
+    Call<XoaDangKyResponse> xoaDangKyLopHoc(@Body XoaDangKyRequest request);
 }
