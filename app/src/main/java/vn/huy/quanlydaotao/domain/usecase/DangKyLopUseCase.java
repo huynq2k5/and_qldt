@@ -15,8 +15,4 @@ public class DangKyLopUseCase {
     public LiveData<DangKyLopResponse> thucHienDangKy(int idNguoiDung, int idLopHoc) {
         return repository.dangKyLopRemote(idNguoiDung, idLopHoc);
     }
-
-    public boolean daDangKy(int idNguoiDung, int idLopHoc) {
-        return repository.kiemTraDaDangKyLocal(idNguoiDung, idLopHoc);
-    }
 }

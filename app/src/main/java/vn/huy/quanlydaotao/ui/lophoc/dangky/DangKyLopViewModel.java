@@ -20,10 +20,6 @@ public class DangKyLopViewModel extends ViewModel {
         return dangKyLopUseCase.thucHienDangKy(idNguoiDung, idLopHoc);
     }
 
-    public boolean kiemTraTrangThai(int idNguoiDung, int idLopHoc) {
-        return dangKyLopUseCase.daDangKy(idNguoiDung, idLopHoc);
-    }
-
     public LiveData<Boolean> getIsProcessing() {
         return isProcessing;
     }

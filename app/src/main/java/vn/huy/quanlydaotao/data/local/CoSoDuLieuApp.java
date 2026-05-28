@@ -9,7 +9,6 @@ import vn.huy.quanlydaotao.data.local.dao.BaiKiemTraDao;
 import vn.huy.quanlydaotao.data.local.dao.BaiLamTamDao;
 import vn.huy.quanlydaotao.data.local.dao.CauHoiDao;
 import vn.huy.quanlydaotao.data.local.dao.ChiTietKetQuaDao;
-import vn.huy.quanlydaotao.data.local.dao.DangKyLopDao;
 import vn.huy.quanlydaotao.data.local.dao.KetQuaDao;
 import vn.huy.quanlydaotao.data.local.dao.KhoaHocDao;
 import vn.huy.quanlydaotao.data.local.dao.LichMeetDao;
@@ -22,7 +21,6 @@ import vn.huy.quanlydaotao.data.local.entity.BaiKiemTraEntity;
 import vn.huy.quanlydaotao.data.local.entity.BaiLamTamEntity;
 import vn.huy.quanlydaotao.data.local.entity.CauHoiEntity;
 import vn.huy.quanlydaotao.data.local.entity.ChiTietKetQuaEntity;
-import vn.huy.quanlydaotao.data.local.entity.DangKyLopEntity;
 import vn.huy.quanlydaotao.data.local.entity.KetQuaEntity;
 import vn.huy.quanlydaotao.data.local.entity.KhoaHocEntity;
 import vn.huy.quanlydaotao.data.local.entity.LichMeetEntity;
@@ -36,7 +34,6 @@ import vn.huy.quanlydaotao.data.local.entity.TienDoEntity;
         LopHocEntity.class,
         BaiHocEntity.class,
         LichMeetEntity.class,
-        DangKyLopEntity.class,
         BaiKiemTraEntity.class,
         CauHoiEntity.class,
         BaiLamTamEntity.class,
@@ -44,7 +41,7 @@ import vn.huy.quanlydaotao.data.local.entity.TienDoEntity;
         ChiTietKetQuaEntity.class,
         ThongBaoEntity.class,
         TienDoEntity.class,
-        LichSuEntity.class}, version = 18, exportSchema = false)
+        LichSuEntity.class}, version = 19, exportSchema = false)
 public abstract class CoSoDuLieuApp extends RoomDatabase {
     private static CoSoDuLieuApp instance;
 
@@ -52,7 +49,6 @@ public abstract class CoSoDuLieuApp extends RoomDatabase {
     public abstract LopHocDao lopHocDao();
     public abstract BaiHocDao baiHocDao();
     public abstract LichMeetDao lichMeetDao();
-    public abstract DangKyLopDao dangKyLopDao();
     public abstract BaiKiemTraDao baiKiemTraDao();
     public abstract CauHoiDao cauHoiDao();
     public abstract BaiLamTamDao baiLamTamDao();
