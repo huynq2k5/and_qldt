@@ -23,6 +23,7 @@ import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
 import vn.huy.quanlydaotao.data.local.TokenManager;
 import vn.huy.quanlydaotao.ui.login.LoginActivity;
+import vn.huy.quanlydaotao.ui.canhan.LichSuActivity;
 import vn.huy.quanlydaotao.ui.main.DialogHelper;
 
 public class CaNhanFragment extends Fragment {
@@ -81,6 +82,7 @@ public class CaNhanFragment extends Fragment {
         LinearLayout btnBiometric = view.findViewById(R.id.btnBiometric);
         LinearLayout btnChangePassword = view.findViewById(R.id.btnChangePassword);
         switchBiometric = view.findViewById(R.id.switchBiometric);
+        LinearLayout btnExamHistory = view.findViewById(R.id.btnExamHistory);
 
         if (tvProfileName != null) tvProfileName.setText(tokenManager.layHoTen());
         if (tvProfileEmail != null) tvProfileEmail.setText(tokenManager.layEmail());
@@ -107,6 +109,13 @@ public class CaNhanFragment extends Fragment {
             btnChangePassword.setOnClickListener(v -> {
                 DoiPassBottomSheet doiPassBottomSheet = DoiPassBottomSheet.newInstance();
                 doiPassBottomSheet.show(getChildFragmentManager(), "DoiPassBottomSheet");
+            });
+        }
+        if (btnExamHistory != null) {
+            btnExamHistory.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), LichSuActivity.class);
+                intent.putExtra("ID_NGUOI_DUNG", tokenManager.layId());
+                startActivity(intent);
             });
         }
     }

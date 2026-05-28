@@ -1,6 +1,8 @@
 package vn.huy.quanlydaotao.data.remote.api;
 
 import java.util.List;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -23,6 +25,7 @@ import vn.huy.quanlydaotao.data.remote.dto.KetQuaRequest;
 import vn.huy.quanlydaotao.data.remote.dto.KetQuaResponse;
 import vn.huy.quanlydaotao.data.remote.dto.KhoaHocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.LichMeetResponse;
+import vn.huy.quanlydaotao.data.remote.dto.LichSuResponse;
 import vn.huy.quanlydaotao.data.remote.dto.LopHocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.NguoiDungRequest;
 import vn.huy.quanlydaotao.data.remote.dto.NguoiDungResponse;
@@ -79,4 +82,6 @@ public interface DichVuApi {
     Call<TienDoResponse> luuTienDo(@Body TienDoRequest request);
     @POST("da_doc.php")
     Call<DaDocResponse> danhDauDaDoc(@Body DaDocRequest request);
+    @POST("xem_lich_su.php")
+    Call<LichSuResponse> xemLichSuKiemTra(@Body Map<String, Integer> requestBody);
 }
