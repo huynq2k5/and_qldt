@@ -19,6 +19,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Quanlydaotao">
         <activity
+            android:name=".ui.canhan.ChungChiActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.canhan.LichSuActivity"
             android:exported="false" />
 
@@ -30,7 +33,7 @@
 
         <activity
             android:name=".ui.thongbao.ThongBaoActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name=".ui.canhan.EditProfileActivity"
             android:exported="false" />

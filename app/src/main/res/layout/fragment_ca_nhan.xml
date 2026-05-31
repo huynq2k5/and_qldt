@@ -308,7 +308,7 @@
                         android:background="@color/surface_variant" />
 
                     <LinearLayout
-                        android:id="@+id/btnDownloads"
+                        android:id="@+id/btnCC"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:background="?attr/selectableItemBackground"

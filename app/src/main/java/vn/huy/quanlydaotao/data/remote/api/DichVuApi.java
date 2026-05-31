@@ -15,6 +15,7 @@ import vn.huy.quanlydaotao.data.remote.dto.BaiHocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.BaseResponse;
 import vn.huy.quanlydaotao.data.remote.dto.CauHoiResponse;
 import vn.huy.quanlydaotao.data.remote.dto.ChiTietKetQuaResponse;
+import vn.huy.quanlydaotao.data.remote.dto.ChungChiResponse;
 import vn.huy.quanlydaotao.data.remote.dto.DaDocRequest;
 import vn.huy.quanlydaotao.data.remote.dto.DaDocResponse;
 import vn.huy.quanlydaotao.data.remote.dto.DangKyLopRequest;
@@ -88,4 +89,8 @@ public interface DichVuApi {
     Call<LichSuResponse> xemLichSuKiemTra(@Body Map<String, Integer> requestBody);
     @POST("xoa_dang_ky.php")
     Call<XoaDangKyResponse> xoaDangKyLopHoc(@Body XoaDangKyRequest request);
+    @GET("ds_chung_chi.php")
+    Call<List<ChungChiResponse>> getDanhSachChungChi(
+            @Query("id_nguoi_dung") int idNguoiDung
+    );
 }

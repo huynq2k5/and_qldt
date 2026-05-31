@@ -83,6 +83,7 @@ public class CaNhanFragment extends Fragment {
         LinearLayout btnChangePassword = view.findViewById(R.id.btnChangePassword);
         switchBiometric = view.findViewById(R.id.switchBiometric);
         LinearLayout btnExamHistory = view.findViewById(R.id.btnExamHistory);
+        LinearLayout btnCC = view.findViewById(R.id.btnCC);
 
         if (tvProfileName != null) tvProfileName.setText(tokenManager.layHoTen());
         if (tvProfileEmail != null) tvProfileEmail.setText(tokenManager.layEmail());
@@ -114,6 +115,13 @@ public class CaNhanFragment extends Fragment {
         if (btnExamHistory != null) {
             btnExamHistory.setOnClickListener(v -> {
                 Intent intent = new Intent(getContext(), LichSuActivity.class);
+                intent.putExtra("ID_NGUOI_DUNG", tokenManager.layId());
+                startActivity(intent);
+            });
+        }
+        if (btnCC != null) {
+            btnCC.setOnClickListener(v -> {
+                Intent intent = new Intent(getContext(), ChungChiActivity.class);
                 intent.putExtra("ID_NGUOI_DUNG", tokenManager.layId());
                 startActivity(intent);
             });
