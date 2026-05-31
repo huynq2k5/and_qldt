@@ -35,7 +35,8 @@ public class BaiKiemTraRepositoryImpl implements IRepositoryBaiKiemTra {
                         entity.getDiemDat(),
                         entity.getThoiGianLam(),
                         entity.getTenKhoaHoc(),
-                        entity.getIdKetQua()
+                        entity.getIdKetQua(),
+                        entity.getUrlChungChi()
                 ));
             }
             return domainList;
@@ -58,7 +59,8 @@ public class BaiKiemTraRepositoryImpl implements IRepositoryBaiKiemTra {
                                     dto.getDiemDat(),
                                     dto.getThoiGianLam(),
                                     dto.getTenKhoaHoc(),
-                                    dto.getIdKetQua()
+                                    dto.getIdKetQua(),
+                                    dto.getUrlChungChi()
                             ));
                         }
                         baiKiemTraDao.deleteAll();

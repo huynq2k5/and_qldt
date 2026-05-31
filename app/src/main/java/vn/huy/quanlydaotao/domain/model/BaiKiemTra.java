@@ -8,8 +8,9 @@ public class BaiKiemTra {
     private int thoiGianLam;
     private String tenKhoaHoc;
     private Integer idKetQua;
+    private String urlChungChi;
 
-    public BaiKiemTra(int id, int idKhoaHoc, String tieuDe, int diemDat, int thoiGianLam, String tenKhoaHoc, Integer idKetQua) {
+    public BaiKiemTra(int id, int idKhoaHoc, String tieuDe, int diemDat, int thoiGianLam, String tenKhoaHoc, Integer idKetQua, String urlChungChi) {
         this.id = id;
         this.idKhoaHoc = idKhoaHoc;
         this.tieuDe = tieuDe;
@@ -17,14 +18,15 @@ public class BaiKiemTra {
         this.thoiGianLam = thoiGianLam;
         this.tenKhoaHoc = tenKhoaHoc;
         this.idKetQua = idKetQua;
+        this.urlChungChi = urlChungChi;
     }
 
     public Integer getIdKetQua() { return idKetQua; }
-
     public int getId() { return id; }
     public int getIdKhoaHoc() { return idKhoaHoc; }
     public String getTieuDe() { return tieuDe; }
     public int getDiemDat() { return diemDat; }
     public int getThoiGianLam() { return thoiGianLam; }
     public String getTenKhoaHoc() { return tenKhoaHoc; }
+    public String getUrlChungChi() { return urlChungChi; }
 }

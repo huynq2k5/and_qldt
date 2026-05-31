@@ -17,6 +17,10 @@ public class BaiKiemTraResponse {
     private String tenKhoaHoc;
     @SerializedName("id_ket_qua")
     private Integer idKetQua;
+    @SerializedName("url_chung_chi")
+    private String urlChungChi;
+
+    public String getUrlChungChi() { return urlChungChi; }
 
     public int getId() { return id; }
     public int getIdKhoaHoc() { return idKhoaHoc; }

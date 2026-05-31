@@ -3,18 +3,13 @@ package vn.huy.quanlydaotao.ui.luyentap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.button.MaterialButton;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.domain.model.BaiKiemTra;
 
@@ -24,7 +19,7 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.ViewHo
 
     public interface OnPracticeClickListener {
         void onStart(BaiKiemTra item);
-        void onViewResult(int idKetQua);
+        void onViewResult(int idKetQua, String urlChungChi);
     }
 
     public void setOnPracticeClickListener(OnPracticeClickListener listener) {
@@ -63,7 +58,7 @@ public class PracticeAdapter extends RecyclerView.Adapter<PracticeAdapter.ViewHo
         });
 
         holder.btnViewResult.setOnClickListener(v -> {
-            if (listener != null) listener.onViewResult(item.getIdKetQua());
+            if (listener != null) listener.onViewResult(item.getIdKetQua(), item.getUrlChungChi());
         });
     }
 

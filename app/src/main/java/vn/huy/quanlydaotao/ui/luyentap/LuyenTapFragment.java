@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
@@ -17,9 +15,7 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.google.android.material.snackbar.Snackbar;
-
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
 import vn.huy.quanlydaotao.data.local.TokenManager;
@@ -84,10 +80,10 @@ public class LuyenTapFragment extends Fragment {
             }
 
             @Override
-            public void onViewResult(int idKetQua) {
-                // Chuyển sang màn hình xem chi tiết kết quả
+            public void onViewResult(int idKetQua, String urlChungChi) {
                 Intent intent = new Intent(getActivity(), vn.huy.quanlydaotao.ui.ketqua.KetQuaActivity.class);
                 intent.putExtra("ID_KET_QUA", idKetQua);
+                intent.putExtra("URL_CHUNG_CHI", urlChungChi);
                 startActivity(intent);
             }
         });
@@ -112,24 +108,15 @@ public class LuyenTapFragment extends Fragment {
 
     private void observeData() {
         int idUser = tokenManager.layId();
-
-        // Tìm các View để xử lý ẩn hiện
         View layoutEmpty = getView().findViewById(R.id.layoutEmpty);
-        // Nếu bạn có tiêu đề danh sách, hãy tìm nó để ẩn cùng lúc
-        // View tvListTitle = getView().findViewById(R.id.tvListTitle);
 
         viewModel.getDanhSachBaiKiemTra().observe(getViewLifecycleOwner(), items -> {
             if (items == null || items.isEmpty()) {
-                // Khi không có dữ liệu
                 if (layoutEmpty != null) layoutEmpty.setVisibility(View.VISIBLE);
                 if (rvPracticeQuizzes != null) rvPracticeQuizzes.setVisibility(View.GONE);
-                // if (tvListTitle != null) tvListTitle.setVisibility(View.GONE);
             } else {
-                // Khi có dữ liệu
                 if (layoutEmpty != null) layoutEmpty.setVisibility(View.GONE);
                 if (rvPracticeQuizzes != null) rvPracticeQuizzes.setVisibility(View.VISIBLE);
-                // if (tvListTitle != null) tvListTitle.setVisibility(View.VISIBLE);
-
                 adapter.setItems(items);
             }
         });

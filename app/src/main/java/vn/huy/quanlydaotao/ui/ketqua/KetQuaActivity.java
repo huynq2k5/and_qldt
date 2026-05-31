@@ -141,14 +141,17 @@ public class KetQuaActivity extends AppCompatActivity {
             triggerConfetti();
             if (urlChungChi != null && !urlChungChi.isEmpty()) {
                 findViewById(R.id.btnChungChi).setVisibility(View.VISIBLE);
+                findViewById(R.id.tvChungChi).setVisibility(View.VISIBLE);
             } else {
                 findViewById(R.id.btnChungChi).setVisibility(View.GONE);
+                findViewById(R.id.tvChungChi).setVisibility(View.GONE);
             }
         } else {
             tvStatusLabel.setText("CHƯA ĐẠT");
             tvStatusLabel.setTextColor(Color.parseColor("#F44336"));
             lottieResult.setAnimation(R.raw.lottie_fail);
             findViewById(R.id.btnChungChi).setVisibility(View.GONE);
+            findViewById(R.id.tvChungChi).setVisibility(View.GONE);
         }
         lottieResult.playAnimation();
     }
