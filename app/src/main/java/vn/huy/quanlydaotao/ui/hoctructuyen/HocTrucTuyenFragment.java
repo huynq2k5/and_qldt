@@ -182,10 +182,10 @@ public class HocTrucTuyenFragment extends Fragment {
     }
 
     private void handleJoinMeeting(String link) {
-        Boolean isConnected = mainViewModel.getIsConnected().getValue();
         View rootView = getView();
         if (rootView == null) return;
 
+        Boolean isConnected = mainViewModel.getIsConnected().getValue();
         if (isConnected != null && !isConnected) {
             showStatusSnackbar(rootView, "Không có mạng, không thể vào học lúc này!", "#F59E0B", Color.BLACK);
             return;
@@ -196,14 +196,16 @@ public class HocTrucTuyenFragment extends Fragment {
             return;
         }
 
-        if (getActivity() instanceof vn.huy.quanlydaotao.ui.main.MainActivity) {
-            vn.huy.quanlydaotao.ui.main.MainActivity mainActivity = (vn.huy.quanlydaotao.ui.main.MainActivity) getActivity();
-            if (mainActivity.kiemTraQuyenBeNoi()) {
-                Intent intentService = new Intent(requireContext(), vn.huy.quanlydaotao.ui.hoctructuyen.NhacChoService.class);
-                androidx.core.content.ContextCompat.startForegroundService(requireContext(), intentService);
-            } else {
-                mainActivity.yeuCauQuyenBeNoi();
-                return;
+        if (tokenManager.laNhacChoDaBat()) {
+            if (getActivity() instanceof vn.huy.quanlydaotao.ui.main.MainActivity) {
+                vn.huy.quanlydaotao.ui.main.MainActivity mainActivity = (vn.huy.quanlydaotao.ui.main.MainActivity) getActivity();
+                if (mainActivity.kiemTraQuyenBeNoi()) {
+                    Intent intentService = new Intent(requireContext(), vn.huy.quanlydaotao.ui.hoctructuyen.NhacChoService.class);
+                    androidx.core.content.ContextCompat.startForegroundService(requireContext(), intentService);
+                } else {
+                    mainActivity.yeuCauQuyenBeNoi();
+                    return;
+                }
             }
         }
 

@@ -13,6 +13,7 @@ public class TokenManager {
     private static final String KHOA_VAI_TRO = "user_role";
     private static final String KHOA_THOI_GIAN_DANG_NHAP = "login_time";
     private static final String KHOA_VAN_TAY = "use_biometric";
+    private static final String KHOA_NHAC_CHO = "use_waiting_music";
     private static final long THOI_GIAN_HET_HAN = 10 * 24 * 60 * 60 * 1000L;
 
     private SharedPreferences sharedPreferences;
@@ -41,6 +42,15 @@ public class TokenManager {
 
     public boolean laVanTayDaBat() {
         return sharedPreferences.getBoolean(KHOA_VAN_TAY, false);
+    }
+
+    public void thietLapNhacCho(boolean enabled) {
+        editor.putBoolean(KHOA_NHAC_CHO, enabled);
+        editor.apply();
+    }
+
+    public boolean laNhacChoDaBat() {
+        return sharedPreferences.getBoolean(KHOA_NHAC_CHO, false);
     }
 
     public int layId() {
@@ -75,10 +85,13 @@ public class TokenManager {
 
     public void xoaToken() {
         boolean trangThaiVanTay = laVanTayDaBat();
+        boolean trangThaiNhacCho = laNhacChoDaBat();
         editor.clear();
         editor.putBoolean(KHOA_VAN_TAY, trangThaiVanTay);
+        editor.putBoolean(KHOA_NHAC_CHO, trangThaiNhacCho);
         editor.apply();
     }
+
     public void capNhatHoTenEmail(String hoTen, String email) {
         editor.putString(KHOA_HO_TEN, hoTen);
         editor.putString(KHOA_EMAIL, email);

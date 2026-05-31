@@ -1,15 +1,13 @@
 package vn.huy.quanlydaotao.ui.home;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.graphics.Insets;
@@ -20,12 +18,9 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
-
+import com.google.android.material.snackbar.Snackbar;
 import vn.huy.quanlydaotao.R;
 import vn.huy.quanlydaotao.data.local.CoSoDuLieuApp;
 import vn.huy.quanlydaotao.data.local.TokenManager;
@@ -33,8 +28,10 @@ import vn.huy.quanlydaotao.data.remote.api.DichVuApi;
 import vn.huy.quanlydaotao.data.remote.api.RetrofitClient;
 import vn.huy.quanlydaotao.data.repository.KhoaHocRepositoryImpl;
 import vn.huy.quanlydaotao.domain.usecase.LayDanhSachKhoaHocUseCase;
+import vn.huy.quanlydaotao.ui.canhan.ChungChiActivity;
 import vn.huy.quanlydaotao.ui.canhan.DoiPassBottomSheet;
 import vn.huy.quanlydaotao.ui.canhan.EditProfileActivity;
+import vn.huy.quanlydaotao.ui.canhan.LichSuActivity;
 import vn.huy.quanlydaotao.ui.khoahoc.KhoaHocViewModel;
 import vn.huy.quanlydaotao.ui.thongbao.ThongBaoActivity;
 
@@ -62,7 +59,6 @@ public class HomeFragment extends Fragment {
         ViewCompat.setOnApplyWindowInsetsListener(view, (v, windowInsets) -> {
             Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
             if (header != null) {
-                // Đẩy padding top của header xuống bằng chiều cao Status Bar
                 header.setPadding(header.getPaddingLeft(), systemBars.top,
                         header.getPaddingRight(), header.getPaddingBottom());
             }
@@ -80,7 +76,6 @@ public class HomeFragment extends Fragment {
         if (shimmerHomeCourses != null) {
             shimmerHomeCourses.startShimmer();
         }
-
 
         TextView tvUsername = view.findViewById(R.id.tvUsername);
         TextView tvGreeting = view.findViewById(R.id.tvGreeting);
@@ -110,6 +105,42 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(getContext(), EditProfileActivity.class));
         });
 
+        view.findViewById(R.id.btnDevice);
+
+        MaterialCardView btnKQT = view.findViewById(R.id.btnKQT);
+        btnKQT.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), LichSuActivity.class);
+            intent.putExtra("ID_NGUOI_DUNG", tokenManager.layId());
+            startActivity(intent);
+        });
+
+        MaterialCardView btnCC = view.findViewById(R.id.btnCC);
+        btnCC.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ChungChiActivity.class);
+            intent.putExtra("ID_NGUOI_DUNG", tokenManager.layId());
+            startActivity(intent);
+        });
+
+        MaterialCardView btnNhac = view.findViewById(R.id.btnNhac);
+        if (btnNhac != null) {
+            btnNhac.setOnClickListener(v -> {
+                boolean isMusicEnabled = tokenManager.laNhacChoDaBat();
+                boolean newStatus = !isMusicEnabled;
+                tokenManager.thietLapNhacCho(newStatus);
+
+                String msg = newStatus ? "Đã bật tính năng nhạc chờ cuộc họp" : "Đã tắt tính năng nhạc chờ cuộc họp";
+                String colorHex = newStatus ? "#4CAF50" : "#000000";
+
+                Snackbar snackbar = Snackbar.make(view, msg, Snackbar.LENGTH_SHORT);
+                snackbar.setBackgroundTint(Color.parseColor(colorHex));
+                snackbar.setTextColor(Color.WHITE);
+                View bottomMenu = getActivity() != null ? getActivity().findViewById(R.id.bottom_menu) : null;
+                if (bottomMenu != null) {
+                    snackbar.setAnchorView(bottomMenu);
+                }
+                snackbar.show();
+            });
+        }
     }
 
     private void setupHomeData(View view) {

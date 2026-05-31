@@ -281,7 +281,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="20dp"
-                            android:src="@drawable/medal"
+                            android:src="@drawable/exam"
                             app:tint="@color/text_secondary" />
 
                         <TextView
@@ -321,7 +321,7 @@
                         <ImageView
                             android:layout_width="24dp"
                             android:layout_height="24dp"
-                            android:src="@drawable/graduation_cap"
+                            android:src="@drawable/medal_line"
                             app:tint="@color/text_secondary" />
 
                         <TextView

@@ -24,7 +24,6 @@ public class MusicAdapter extends ArrayAdapter<String> {
         this.songNames = songNames;
     }
 
-    // Cập nhật hàm này để nhận thêm trạng thái phát nhạc từ Service truyền sang
     public void updatePlayingState(int position, boolean isPlaying) {
         this.selectedPosition = position;
         this.isPlaying = isPlaying;
@@ -48,10 +47,10 @@ public class MusicAdapter extends ArrayAdapter<String> {
         if (ivPlayStatus != null) {
             // Chỉ hiển thị nút Pause ĐỎ khi trùng vị trí VÀ nhạc ĐANG PHÁT thực tế
             if (position == selectedPosition && isPlaying) {
-                ivPlayStatus.setImageResource(android.R.drawable.ic_media_pause);
+                ivPlayStatus.setImageResource(R.drawable.pause_fill);
                 ivPlayStatus.setColorFilter(0xFFEF4444); // Màu đỏ
             } else {
-                ivPlayStatus.setImageResource(android.R.drawable.ic_media_play);
+                ivPlayStatus.setImageResource(R.drawable.play_fill);
                 ivPlayStatus.setColorFilter(0xFF10B981); // Màu xanh lá
             }
         }

@@ -234,7 +234,7 @@ public class NhacChoService extends Service {
 
                             if (khoangCach < 250) {
                                 params.x = dismissCenterX - (floatingView.getWidth() / 2);
-                                params.y = dismissCenterY - (floatingView.getHeight() / 2);
+                                params.y = dismissCenterY - (floatingView.getHeight() / 2) - 50;
                                 cardBubble.setAlpha(0.5f);
                             } else {
                                 params.x = initialX + (int) (event.getRawX() - initialTouchX);

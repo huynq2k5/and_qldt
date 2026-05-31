@@ -11,7 +11,7 @@ import vn.huy.quanlydaotao.data.local.entity.KhoaHocEntity;
 
 @Dao
 public interface KhoaHocDao {
-    @Query("SELECT * FROM khoa_hoc")
+    @Query("SELECT * FROM khoa_hoc ORDER BY id DESC")
     LiveData<List<KhoaHocEntity>> getDanhSachKhoaHoc();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
