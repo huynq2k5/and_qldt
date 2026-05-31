@@ -1,15 +1,14 @@
 package vn.huy.quanlydaotao.ui.ketqua;
 
 import android.animation.Animator;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import com.airbnb.lottie.LottieAnimationView;
@@ -35,6 +34,7 @@ public class KetQuaActivity extends AppCompatActivity {
     private KonfettiView konfettiView;
     private KetQuaViewModel viewModel;
     private int idKetQua;
+    private String urlChungChi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,10 +48,10 @@ public class KetQuaActivity extends AppCompatActivity {
         });
 
         androidx.core.view.WindowInsetsControllerCompat windowInsetsController = androidx.core.view.WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView());
-
         windowInsetsController.setAppearanceLightStatusBars(false);
 
         idKetQua = getIntent().getIntExtra("ID_KET_QUA", 0);
+        urlChungChi = getIntent().getStringExtra("URL_CHUNG_CHI");
 
         mappingWidgets();
         setupViewModel();
@@ -81,9 +81,17 @@ public class KetQuaActivity extends AppCompatActivity {
         });
 
         findViewById(R.id.btnViewDetail).setOnClickListener(v -> {
-            android.content.Intent intent = new android.content.Intent(KetQuaActivity.this, ChiTietKetQuaActivity.class);
+            Intent intent = new Intent(KetQuaActivity.this, ChiTietKetQuaActivity.class);
             intent.putExtra("ID_KET_QUA", idKetQua);
             startActivity(intent);
+        });
+
+        findViewById(R.id.btnChungChi).setOnClickListener(v -> {
+            if (urlChungChi != null && !urlChungChi.isEmpty()) {
+                Uri uri = Uri.parse(urlChungChi);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
         });
     }
 
@@ -131,10 +139,16 @@ public class KetQuaActivity extends AppCompatActivity {
             tvStatusLabel.setTextColor(Color.parseColor("#4CAF50"));
             lottieResult.setAnimation(R.raw.lottie_success);
             triggerConfetti();
+            if (urlChungChi != null && !urlChungChi.isEmpty()) {
+                findViewById(R.id.btnChungChi).setVisibility(View.VISIBLE);
+            } else {
+                findViewById(R.id.btnChungChi).setVisibility(View.GONE);
+            }
         } else {
             tvStatusLabel.setText("CHƯA ĐẠT");
             tvStatusLabel.setTextColor(Color.parseColor("#F44336"));
             lottieResult.setAnimation(R.raw.lottie_fail);
+            findViewById(R.id.btnChungChi).setVisibility(View.GONE);
         }
         lottieResult.playAnimation();
     }

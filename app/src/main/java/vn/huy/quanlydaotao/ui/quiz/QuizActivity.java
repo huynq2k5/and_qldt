@@ -165,6 +165,7 @@ public class QuizActivity extends AppCompatActivity {
                 if ("success".equals(ketQua.getStatus())) {
                     Intent intent = new Intent(QuizActivity.this, KetQuaActivity.class);
                     intent.putExtra("ID_KET_QUA", ketQua.getIdKetQua());
+                    intent.putExtra("URL_CHUNG_CHI", ketQua.getUrlChungChi());
                     startActivity(intent);
                     finish();
                 } else {

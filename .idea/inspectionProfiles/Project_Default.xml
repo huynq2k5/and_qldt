@@ -255,6 +255,7 @@
     <inspection_tool class="AndroidLintLockedOrientationActivity" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintLogConditional" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintLogTagMismatch" enabled="false" level="ERROR" enabled_by_default="false" />
+    <inspection_tool class="AndroidLintLoginCredentials" enabled="false" level="WARNING" enabled_by_default="false" />
     <inspection_tool class="AndroidLintLongLogTag" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AndroidLintMangledCRLF" enabled="false" level="ERROR" enabled_by_default="false" />
     <inspection_tool class="AndroidLintManifestOrder" enabled="false" level="WARNING" enabled_by_default="false" />

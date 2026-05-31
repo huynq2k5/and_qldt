@@ -31,10 +31,10 @@ public class KetQuaRepositoryImpl implements IRepositoryKetQua {
             public void onResponse(Call<KetQuaResponse> call, Response<KetQuaResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     KetQuaResponse res = response.body();
-                    KetQua domainModel = new KetQua(res.getStatus(), res.getId_ket_qua());
+                    KetQua domainModel = new KetQua(res.getStatus(), res.getId_ket_qua(), res.getUrl_chung_chi());
 
                     new Thread(() -> {
-                        ketQuaDao.insert(new KetQuaEntity(res.getId_ket_qua(), res.getStatus()));
+                        ketQuaDao.insert(new KetQuaEntity(res.getId_ket_qua(), res.getStatus(), res.getUrl_chung_chi()));
                         liveData.postValue(domainModel);
                     }).start();
                 }
