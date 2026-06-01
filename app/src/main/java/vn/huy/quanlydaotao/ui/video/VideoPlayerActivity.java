@@ -28,6 +28,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
     private final Handler progressHandler = new Handler(Looper.getMainLooper());
     private Runnable progressRunnable;
     private int currentPosition = -1;
+    private DownloadCacheManager downloadCacheManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     super.onPageSelected(position);
                     handleVideoPlayback(position);
                     startTimeTracking(position);
+                    triggerEagerDownload(position);
                 }
             });
         }
@@ -64,10 +66,30 @@ public class VideoPlayerActivity extends AppCompatActivity {
 
     private void setupDependencies() {
         tokenManager = new TokenManager(this);
+        downloadCacheManager = DownloadCacheManager.getInstance(this);
         DichVuApi api = RetrofitClient.getClient().create(DichVuApi.class);
         TienDoRepositoryImpl repo = new TienDoRepositoryImpl(
                 CoSoDuLieuApp.getInstance(this).tienDoDao(), api);
         capNhatTienDoUseCase = new CapNhatTienDoUseCase(repo);
+    }
+
+    private void triggerEagerDownload(int position) {
+        if (videoLessons == null) return;
+
+        String currentUrl = videoLessons.get(position).getDuongDanTep();
+        downloadCacheManager.eagerCacheVideo(currentUrl);
+
+        if (position + 1 < videoLessons.size()) {
+            String nextUrl = videoLessons.get(position + 1).getDuongDanTep();
+            downloadCacheManager.eagerCacheVideo(nextUrl);
+        }
+
+        if (position - 1 >= 0) {
+            downloadCacheManager.cancelDownload(videoLessons.get(position - 1).getDuongDanTep());
+        }
+        if (position + 2 < videoLessons.size()) {
+            downloadCacheManager.cancelDownload(videoLessons.get(position + 2).getDuongDanTep());
+        }
     }
 
     private void startTimeTracking(int position) {
@@ -138,7 +160,19 @@ public class VideoPlayerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         stopTimeTracking();
+
         if (viewPager2 != null) {
+            View child = viewPager2.getChildAt(0);
+            if (child instanceof RecyclerView) {
+                RecyclerView rv = (RecyclerView) child;
+                for (int i = 0; i < adapter.getItemCount(); i++) {
+                    VideoSwipeAdapter.VideoViewHolder holder =
+                            (VideoSwipeAdapter.VideoViewHolder) rv.findViewHolderForAdapterPosition(i);
+                    if (holder != null) {
+                        holder.releasePlayer();
+                    }
+                }
+            }
             viewPager2.setAdapter(null);
         }
     }

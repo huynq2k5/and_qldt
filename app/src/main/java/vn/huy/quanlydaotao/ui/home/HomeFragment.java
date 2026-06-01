@@ -34,6 +34,8 @@ import vn.huy.quanlydaotao.ui.canhan.EditProfileActivity;
 import vn.huy.quanlydaotao.ui.canhan.LichSuActivity;
 import vn.huy.quanlydaotao.ui.khoahoc.KhoaHocViewModel;
 import vn.huy.quanlydaotao.ui.thongbao.ThongBaoActivity;
+import vn.huy.quanlydaotao.ui.main.DialogHelper;
+import vn.huy.quanlydaotao.ui.video.DownloadCacheManager;
 
 public class HomeFragment extends Fragment {
 
@@ -105,8 +107,6 @@ public class HomeFragment extends Fragment {
             startActivity(new Intent(getContext(), EditProfileActivity.class));
         });
 
-        view.findViewById(R.id.btnDevice);
-
         MaterialCardView btnKQT = view.findViewById(R.id.btnKQT);
         btnKQT.setOnClickListener(v -> {
             Intent intent = new Intent(getContext(), LichSuActivity.class);
@@ -129,7 +129,7 @@ public class HomeFragment extends Fragment {
                 tokenManager.thietLapNhacCho(newStatus);
 
                 String msg = newStatus ? "Đã bật tính năng nhạc chờ cuộc họp" : "Đã tắt tính năng nhạc chờ cuộc họp";
-                String colorHex = newStatus ? "#4CAF50" : "#000000";
+                String colorHex = newStatus ? "#10B981" : "#000000";
 
                 Snackbar snackbar = Snackbar.make(view, msg, Snackbar.LENGTH_SHORT);
                 snackbar.setBackgroundTint(Color.parseColor(colorHex));
@@ -139,6 +139,36 @@ public class HomeFragment extends Fragment {
                     snackbar.setAnchorView(bottomMenu);
                 }
                 snackbar.show();
+            });
+        }
+
+        MaterialCardView btnDevice = view.findViewById(R.id.btnDevice);
+        if (btnDevice != null) {
+            btnDevice.setOnClickListener(v -> {
+                DialogHelper.showConfirmDialog(
+                        requireContext(),
+                        "Xóa bộ nhớ đệm",
+                        "Bạn có chắc chắn muốn giải phóng dung lượng và xóa toàn bộ video đã lưu tạm thời không?",
+                        "OK",
+                        "Hủy bỏ",
+                        () -> {
+                            new Thread(() -> {
+                                DownloadCacheManager.getInstance(requireContext()).clearCache();
+                                if (getActivity() != null) {
+                                    getActivity().runOnUiThread(() -> {
+                                        Snackbar snackbar = Snackbar.make(view, "Đã dọn dẹp không gian lưu trữ video hoàn tất", Snackbar.LENGTH_SHORT);
+                                        snackbar.setBackgroundTint(Color.parseColor("#10B981"));
+                                        snackbar.setTextColor(Color.WHITE);
+                                        View bottomMenu = getActivity().findViewById(R.id.bottom_menu);
+                                        if (bottomMenu != null) {
+                                            snackbar.setAnchorView(bottomMenu);
+                                        }
+                                        snackbar.show();
+                                    });
+                                }
+                            }).start();
+                        }
+                );
             });
         }
     }

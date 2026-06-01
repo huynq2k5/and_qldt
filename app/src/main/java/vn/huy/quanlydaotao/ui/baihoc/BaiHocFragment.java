@@ -163,10 +163,6 @@ public class BaiHocFragment extends Fragment {
         Boolean isConnected = mainViewModel.getIsConnected().getValue();
         View rootView = getView();
         if (rootView == null) return;
-        if (isConnected != null && !isConnected) {
-            showStatusSnackbar(rootView, "Không có mạng, không thể xem video bài giảng!", "#F59E0B", Color.BLACK);
-            return;
-        }
         Intent intent = new Intent(getContext(), VideoPlayerActivity.class);
         intent.putExtra("danh_sach_video", new ArrayList<>(realVideoList));
         startActivity(intent);

@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.source.DefaultMediaSourceFactory;
 import com.google.android.exoplayer2.ui.StyledPlayerView;
 import java.util.List;
 import vn.huy.quanlydaotao.R;
@@ -62,26 +63,28 @@ public class VideoSwipeAdapter extends RecyclerView.Adapter<VideoSwipeAdapter.Vi
                 exoPlayer.release();
             }
 
-            exoPlayer = new ExoPlayer.Builder(itemView.getContext()).build();
+            DownloadCacheManager cacheManager = DownloadCacheManager.getInstance(itemView.getContext().getApplicationContext());
+
+            DefaultMediaSourceFactory mediaSourceFactory = new DefaultMediaSourceFactory(cacheManager.getCacheDataSourceFactory());
+
+            exoPlayer = new ExoPlayer.Builder(itemView.getContext())
+                    .setMediaSourceFactory(mediaSourceFactory)
+                    .build();
             playerView.setPlayer(exoPlayer);
 
-            // Cấu hình Controller
             playerView.setUseController(true);
-            playerView.setControllerAutoShow(false); // Không tự hiện khi mới vào
-            playerView.setControllerShowTimeoutMs(3000); // Tự ẩn sau 3 giây
+            playerView.setControllerAutoShow(false);
+            playerView.setControllerShowTimeoutMs(3000);
 
             MediaItem mediaItem = MediaItem.fromUri(baiHoc.getDuongDanTep());
             exoPlayer.setMediaItem(mediaItem);
             exoPlayer.prepare();
             exoPlayer.setRepeatMode(Player.REPEAT_MODE_ONE);
 
-            // LOGIC CHẠM 2 BƯỚC
             playerView.setOnClickListener(v -> {
                 if (!playerView.isControllerFullyVisible()) {
-                    // CHẠM LẦN 1: Nếu controller đang ẩn -> chỉ hiện nó lên
                     playerView.showController();
                 } else {
-                    // CHẠM LẦN 2: Nếu controller đang hiện -> mới thực hiện Play/Pause
                     if (exoPlayer.isPlaying()) {
                         exoPlayer.pause();
                     } else {
@@ -111,6 +114,13 @@ public class VideoSwipeAdapter extends RecyclerView.Adapter<VideoSwipeAdapter.Vi
         public void pauseVideo() {
             if (exoPlayer != null) {
                 exoPlayer.pause();
+            }
+        }
+
+        public void releasePlayer() {
+            if (exoPlayer != null) {
+                exoPlayer.release();
+                exoPlayer = null;
             }
         }
     }
